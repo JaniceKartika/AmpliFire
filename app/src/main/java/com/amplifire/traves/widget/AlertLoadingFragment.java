@@ -52,7 +52,7 @@ public class AlertLoadingFragment extends DialogFragment {
 
     public static void showAlert(AppCompatActivity activity) {
         try {
-            AlertLoadingFragment.setDismiss(activity);
+            setDismiss(activity);
             FragmentManager fm = activity.getSupportFragmentManager();
             AlertLoadingFragment dialog = new AlertLoadingFragment();
             dialog.show(fm, AlertLoadingFragment.TAG);

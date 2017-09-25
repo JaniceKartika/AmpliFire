@@ -24,4 +24,10 @@ final class MainPresenter implements MainContract.Presenter {
     @Nullable
     private MainContract.View mMainView;
 
+    @Override
+    public void takeView(MainContract.View view) {
+
+    }
+
+
 }

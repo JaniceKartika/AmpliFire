@@ -5,4 +5,5 @@ package com.amplifire.traves.feature.base;
  */
 
 public interface BaseView<T> {
+    void showAlert(boolean isShow);
 }

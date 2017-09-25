@@ -18,35 +18,24 @@ import com.amplifire.traves.feature.base.BaseActivity;
 import com.amplifire.traves.feature.main.MainActivity;
 import com.amplifire.traves.feature.signup.SignUpActivity;
 import com.amplifire.traves.widget.AlertLoadingFragment;
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.joanzapata.iconify.widget.IconTextView;
 
-import java.util.Arrays;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SignInActivity extends BaseActivity implements
+public class SignInActivity extends BaseActivity implements SignInContract.View,
         GoogleApiClient.OnConnectionFailedListener {
 
 
@@ -61,8 +50,12 @@ public class SignInActivity extends BaseActivity implements
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
 
-    //facebook
-    private CallbackManager mCallbackManager;
+
+
+
+    @Inject
+    SignInPresenter mSignInPresenter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +65,6 @@ public class SignInActivity extends BaseActivity implements
 
         setView();
         setGoogle();
-        setFacebook();
     }
 
     private void setView() {
@@ -92,8 +84,8 @@ public class SignInActivity extends BaseActivity implements
     }
 
     private void signIn() {
-        edittextEmail.setText(null);
-        edittextPassword.setText(null);
+        edittextEmail.setError(null);
+        edittextPassword.setError(null);
         boolean isValid = true;
 
         String requirement = getString(R.string.error_requirement);
@@ -108,53 +100,10 @@ public class SignInActivity extends BaseActivity implements
         if (isValid) {
             String email = edittextEmail.getText().toString();
             String password = edittextPassword.getText().toString();
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                signInFailed();
-                            } else {
-                                signInSuccess();
-                            }
-                        }
-                    });
+            mSignInPresenter.signIn(email, password);
         }
     }
 
-
-    private void signInGoogle() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-
-    private void signInSuccess() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getToken() instead.
-            String uid = user.getUid();
-            //todo save as a json.
-            MainActivity.startThisActivity(this);
-        }
-    }
-
-    private void signInFailed() {
-        //todo failed
-        Toast.makeText(this, getString(R.string.text_login) + " " + getString(R.string.text_failed), Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 
     //signin google
     private void setGoogle() {
@@ -169,67 +118,9 @@ public class SignInActivity extends BaseActivity implements
                 .build();
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        AlertLoadingFragment.showAlert(this);
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        AlertLoadingFragment.setDismiss(SignInActivity.this);
-                        if (task.isSuccessful()) {
-                            signInSuccess();
-                        } else {
-                            signInFailed();
-                        }
-
-                    }
-                });
-    }
-
-
-    //facebook
-    private void setFacebook() {
-        mCallbackManager = CallbackManager.Factory.create();
-    }
-
-    private void signInFacebook() {
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("user_photos", "email", "public_profile", "user_posts", "AccessToken"));
-        LoginManager.getInstance().logInWithPublishPermissions(this, Arrays.asList("publish_actions"));
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                handleFacebookAccessToken(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                signInFailed();
-            }
-        });
-
-
-    }
-
-    private void handleFacebookAccessToken(AccessToken token) {
-        AlertLoadingFragment.showAlert(this);
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        AlertLoadingFragment.setDismiss(SignInActivity.this);
-                        if (task.isSuccessful()) {
-                            signInSuccess();
-                        } else {
-                            signInFailed();
-                        }
-                    }
-                });
+    private void signInGoogle() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
 
@@ -240,7 +131,7 @@ public class SignInActivity extends BaseActivity implements
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
+                mSignInPresenter.firebaseAuthWithGoogle(account);
             } else {
                 signInFailed();
             }
@@ -255,7 +146,7 @@ public class SignInActivity extends BaseActivity implements
                 signIn();
                 break;
             case R.id.buttonFacebook:
-                signInFacebook();
+                mSignInPresenter.signInFacebook();
                 break;
             case R.id.buttonGoogle:
                 signInGoogle();
@@ -271,6 +162,51 @@ public class SignInActivity extends BaseActivity implements
         Intent intent = new Intent(context, SignInActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
+    }
+
+
+    @Override
+    public void signInSuccess() {
+        showAlert(false);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoUrl = user.getPhotoUrl();
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getToken() instead.
+            String uid = user.getUid();
+//            MainActivity.startThisActivity(this);
+        }
+    }
+
+    @Override
+    public void signInFailed() {
+        showAlert(false);
+        Toast.makeText(this, getString(R.string.text_login) + " " + getString(R.string.text_failed), Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void showAlert(boolean isShow) {
+        if (isShow) {
+            AlertLoadingFragment.showAlert(this);
+        } else {
+            AlertLoadingFragment.setDismiss(this);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSignInPresenter.takeView(this);
     }
 
 

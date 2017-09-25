@@ -17,7 +17,6 @@ import dagger.android.support.DaggerAppCompatActivity;
 
 public class BaseActivity extends DaggerAppCompatActivity {
 
-    public static String TAG = "TAG";
     public Toolbar toolbar;
     public FirebaseAuth mAuth;
     public FirebaseAuth.AuthStateListener mAuthListener;
@@ -33,15 +32,9 @@ public class BaseActivity extends DaggerAppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
+                if (user == null) {
                     //todo go to loginactivity
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
         mAuth.addAuthStateListener(mAuthListener);

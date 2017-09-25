@@ -16,7 +16,11 @@
 
 package com.amplifire.traves.feature.base;
 
-public interface BasePresenter<T> {
+import com.google.firebase.auth.FirebaseAuth;
 
+public interface BasePresenter<T> {
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    void takeView(T view);
 
 }

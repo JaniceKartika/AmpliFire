@@ -3,7 +3,6 @@ package com.amplifire.traves.feature.signup;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,16 +11,16 @@ import com.amplifire.traves.R;
 import com.amplifire.traves.Utils.Utils;
 import com.amplifire.traves.feature.base.BaseActivity;
 import com.amplifire.traves.widget.AlertLoadingFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SignUpActivity extends BaseActivity {
+public class SignUpActivity extends BaseActivity implements SignUpContract.View {
 
     @BindView(R.id.edittextEmail)
     EditText edittextEmail;
@@ -29,6 +28,9 @@ public class SignUpActivity extends BaseActivity {
     EditText edittextPassword;
     @BindView(R.id.edittextConfirmPassword)
     EditText edittextConfirmPassword;
+
+    @Inject
+    SignUpPresenter mSignUpPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,24 +84,9 @@ public class SignUpActivity extends BaseActivity {
         }
 
         if (isValid) {
-            AlertLoadingFragment.showAlert(this);
             String email = edittextEmail.getText().toString();
             String password = edittextPassword.getText().toString();
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            AlertLoadingFragment.setDismiss(SignUpActivity.this);
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(SignUpActivity.this, getString(R.string.text_register) + " " + getString(R.string.text_failed),
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(SignUpActivity.this, getString(R.string.text_register) + " " + getString(R.string.text_success),
-                                        Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        }
-                    });
+            mSignUpPresenter.createUserEmail(email, password);
         }
     }
 
@@ -113,4 +100,36 @@ public class SignUpActivity extends BaseActivity {
     public void onViewClicked() {
         signUp();
     }
+
+    @Override
+    public void showAlert(boolean isShow) {
+        if (isShow) {
+            AlertLoadingFragment.showAlert(this);
+        } else {
+            AlertLoadingFragment.setDismiss(this);
+        }
+    }
+
+    @Override
+    public void registerResult(Task<AuthResult> task) {
+        if (!task.isSuccessful()) {
+            Toast.makeText(SignUpActivity.this, getString(R.string.text_register) + " " + getString(R.string.text_failed) + "," + task.getException().getMessage(),
+                    Toast.LENGTH_SHORT).show();
+            showAlert(false);
+        } else {
+            Toast.makeText(SignUpActivity.this, getString(R.string.text_register) + " " + getString(R.string.text_success),
+                    Toast.LENGTH_SHORT).show();
+            showAlert(false);
+            finish();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSignUpPresenter.takeView(this);
+    }
+
+
+
 }

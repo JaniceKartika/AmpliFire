@@ -16,12 +16,119 @@
 
 package com.amplifire.traves.feature.signin;
 
+import android.app.Activity;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.amplifire.traves.widget.AlertLoadingFragment;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.Arrays;
+
+import javax.inject.Inject;
 
 final class SignInPresenter implements SignInContract.Presenter {
 
 
     @Nullable
     private SignInContract.View mSignInView;
+
+    @Inject
+    public SignInPresenter() {
+    }
+
+    @Override
+    public void signIn(String email, String password) {
+        mSignInView.showAlert(true);
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener((Activity) mSignInView, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            mSignInView.signInFailed();
+                        } else {
+                            mSignInView.signInSuccess();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void signInFacebook() {
+        CallbackManager mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().logInWithReadPermissions((Activity) mSignInView, Arrays.asList("user_photos", "email", "public_profile", "user_posts", "AccessToken"));
+        LoginManager.getInstance().logInWithPublishPermissions((Activity) mSignInView, Arrays.asList("publish_actions"));
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        mSignInView.showAlert(true);
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener((Activity) mSignInView, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            mSignInView.signInSuccess();
+                        } else {
+                            mSignInView.signInFailed();
+                        }
+
+                    }
+                });
+    }
+
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        mSignInView.showAlert(true);
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener((Activity) mSignInView, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        mSignInView.showAlert(false);
+                        if (task.isSuccessful()) {
+                            mSignInView.signInSuccess();
+                        } else {
+                            mSignInView.signInFailed();
+                        }
+                    }
+                });
+    }
+
+
+    @Override
+    public void takeView(SignInContract.View view) {
+        mSignInView = view;
+    }
 
 }

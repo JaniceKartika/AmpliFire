@@ -16,12 +16,42 @@
 
 package com.amplifire.traves.feature.signup;
 
+import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+
+import javax.inject.Inject;
 
 final class SignUpPresenter implements SignUpContract.Presenter {
 
-
     @Nullable
     private SignUpContract.View mSignUpView;
+
+    @Inject
+    public SignUpPresenter() {
+
+    }
+
+    @Override
+    public void createUserEmail(String email, String password) {
+        mSignUpView.showAlert(true);
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener((Activity) mSignUpView, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        mSignUpView.registerResult(task);
+                    }
+                });
+    }
+
+    @Override
+    public void takeView(SignUpContract.View view) {
+        mSignUpView = view;
+    }
+
 
 }
