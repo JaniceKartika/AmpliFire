@@ -8,16 +8,46 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'com.google.gms:google-services:3.1.0'
+        classpath 'me.tatarka:gradle-retrolambda:3.3.0'
         classpath 'io.fabric.tools:gradle:1.24.2'
+        classpath 'com.google.firebase:firebase-plugins:1.1.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
+
+ext {
+    // Sdk and tools
+    minSdkVersion = 19
+    targetSdkVersion = 26
+    compileSdkVersion = 26
+    buildToolsVersion = '26.0.1'
+
+    // App dependencies
+    supportLibraryVersion = '26.0.0'
+    junitVersion = '4.12'
+
+    playServiceVersion = '11.4.0'
+    fireClient = '2.5.2'
+    firebaseVersion = '11.4.0'
+    daggerVersion = '2.11'
+
+    butterknifeVersion = '8.2.1'
+
+    facebookVersion = '4.26.0'
+    fontawesomeVersion = '2.1.1'
+
+}
+
+
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url "https://maven.google.com" // Google's Maven repository
+        }
     }
 }
 

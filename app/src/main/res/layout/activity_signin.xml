@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/dimens_16dp">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/dimens_16dp"
+                android:src="@mipmap/ic_launcher" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimens_8dp"
+                android:layout_marginRight="@dimen/dimens_4dp"
+                android:hint="@string/text_email_address">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edittextEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimens_8dp">
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimens_8dp"
+                    android:layout_marginRight="@dimen/dimens_4dp"
+                    android:hint="@string/text_email_address">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edittextPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:maxLines="1" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/textViewPass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dimens_8dp"
+                    android:text="{fa-eye}"
+                    android:textColor="@color/colorRipple"
+                    android:textSize="@dimen/dimens_16dp" />
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/login"
+                style="@style/MyButton.Red"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimens_8dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/text_login" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/colorRipple" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimens_8dp"
+                    android:layout_marginRight="@dimen/dimens_8dp"
+                    android:text="OR"
+                    android:textSize="@dimen/text_16sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/colorRipple" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimens_8dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:id="@+id/buttonFacebook"
+                    style="@style/MyButton.White"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimens_8dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center">
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:text="{fa-facebook}"
+                        android:textColor="@color/blue_fb"
+                        android:textSize="@dimen/dimens_24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_facebook" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/buttonGoogle"
+                    style="@style/MyButton.White"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimens_8dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:gravity="center">
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:text="{fa-google-plus}"
+                        android:textColor="@color/red_gplus"
+                        android:textSize="@dimen/dimens_24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_gplus" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_dont_have_account" />
+
+                <TextView
+                    android:id="@+id/buttonRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimens_8dp"
+                    android:text="@string/text_register"
+                    android:textColor="@color/red_dark"
+                    android:textSize="@dimen/text_16sp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

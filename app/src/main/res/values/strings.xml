@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Traves</string>
+
+    <string name="text_success">Success</string>
+    <string name="text_failed">Failed</string>
+
+    <string name="facebook_app_id">1917914651865621</string>
+    <string name="fb_login_protocol_scheme">fb1917914651865621</string>
+
+    <string name="error_requirement">Requirement</string>
+    <string name="error_confirm">Confirmation</string>
+    <string name="error_wrong_format">Wrong Format</string>
+    <string name="error_min_char">Minimum %1$s Characters</string>
+    <string name="text_email_address">Email Address</string>
+    <string name="text_password">Password</string>
+    <string name="text_confirm_password">Confirm Password</string>
+    <string name="text_login">Login</string>
+    <string name="text_register">Register</string>
+    <string name="text_forgot_password">Forgot password ?</string>
+    <string name="text_forgot_password_detail">Please input your email address. We\'ll send reset password instruction to your email.</string>
+    <string name="text_dont_have_account">Don\'t have an account ?</string>
+    <string name="text_facebook">Facebook</string>
+    <string name="text_gplus">Google+</string>
+
 </resources>
