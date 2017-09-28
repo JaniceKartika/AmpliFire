@@ -43,6 +43,7 @@ final class SignUpPresenter implements SignUpContract.Presenter {
                 .addOnCompleteListener((Activity) mSignUpView, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        //todo save to fire database
                         mSignUpView.registerResult(task);
                     }
                 });

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
@@ -11,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="@dimen/card_margin"
-        android:elevation="3dp"
+        android:elevation="@dimen/dimens_4dp"
         android:padding="@dimen/dimens_8dp"
         card_view:cardCornerRadius="@dimen/card_main_radius">
 
@@ -21,7 +22,7 @@
 
 
             <ImageView
-                android:id="@+id/thumbnail"
+                android:id="@+id/ivThumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -30,10 +31,10 @@
 
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/thumbnail"
+                android:layout_alignBottom="@+id/ivThumbnail"
                 android:alpha="0.7"
                 android:background="@color/black"
                 android:padding="@dimen/dimens_8dp"
@@ -42,33 +43,20 @@
                 android:paddingTop="@dimen/card_title_padding"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="Title" />
 
             <TextView
-                android:id="@+id/tv_count_quest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/thumbnail"
-                android:padding="@dimen/dimens_4dp"
-                android:paddingLeft="@dimen/card_title_padding"
-                android:paddingTop="@dimen/card_title_padding"
-                android:text="Total Quest :"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-
-            <TextView
-                android:id="@+id/count_quest"
+                android:id="@+id/tv_total_quest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/thumbnail"
-                android:layout_toRightOf="@+id/tv_count_quest"
+                android:layout_below="@id/ivThumbnail"
                 android:padding="@dimen/dimens_4dp"
                 android:paddingRight="@dimen/card_title_padding"
                 android:paddingTop="@dimen/card_title_padding"
-                android:text="8"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:text="Total Quest : 8" />
 
 
         </RelativeLayout>
