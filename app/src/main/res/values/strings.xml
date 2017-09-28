@@ -21,5 +21,7 @@
     <string name="text_dont_have_account">Don\'t have an account ?</string>
     <string name="text_facebook">Facebook</string>
     <string name="text_gplus">Google+</string>
+    <string name="congrats">Congratulation! you\'ve completed the quest</string>
+    <string name="success">Success</string>
 
 </resources>

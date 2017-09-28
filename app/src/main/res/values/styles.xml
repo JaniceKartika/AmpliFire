@@ -13,7 +13,6 @@
 
     </style>
 
-
     <style name="MyButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:clickable">true</item>
         <item name="android:paddingLeft">@dimen/dimens_16dp</item>
