@@ -1,6 +1,7 @@
 package com.amplifire.traves.Utils;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.amplifire.traves.App;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -16,8 +17,8 @@ public class FirebaseUtils {
 
     public static void Log(String name, String event) {
         Bundle bundle = new Bundle();
-//        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, name + "");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name + "");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, event);
         App.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }

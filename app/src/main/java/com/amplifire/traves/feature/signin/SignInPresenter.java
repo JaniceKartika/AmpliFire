@@ -74,7 +74,7 @@ final class SignInPresenter implements SignInContract.Presenter {
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                handleFacebookAccessToken(loginResult.getAccessToken());
+                handleFacebookAccessToken(loginResult);
             }
 
             @Override
@@ -98,6 +98,7 @@ final class SignInPresenter implements SignInContract.Presenter {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            //todo if is new (save to fire database)
                             mSignInView.signInSuccess();
                         } else {
                             mSignInView.signInFailed();
@@ -108,7 +109,8 @@ final class SignInPresenter implements SignInContract.Presenter {
     }
 
 
-    private void handleFacebookAccessToken(AccessToken token) {
+    private void handleFacebookAccessToken(LoginResult loginResult) {
+        AccessToken token = loginResult.getAccessToken();
         mSignInView.showAlert(true);
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -117,6 +119,7 @@ final class SignInPresenter implements SignInContract.Presenter {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         mSignInView.showAlert(false);
                         if (task.isSuccessful()) {
+                            //todo if is new (save to fire database)
                             mSignInView.signInSuccess();
                         } else {
                             mSignInView.signInFailed();
