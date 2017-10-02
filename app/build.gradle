@@ -75,6 +75,11 @@ dependencies {
     compile "com.facebook.android:facebook-android-sdk:$rootProject.facebookVersion"
 
     compile "com.google.android.gms:play-services-auth:$rootProject.playServiceVersion"
+    compile "com.google.android.gms:play-services:$rootProject.playServiceVersion"
+    compile "com.google.android.gms:play-services-maps:$rootProject.playServiceVersion"
+    compile "com.google.maps.android:android-maps-utils:$rootProject.mapsUtils"
+
+
 
     compile "com.firebase:firebase-client-android:$rootProject.fireClient"
 

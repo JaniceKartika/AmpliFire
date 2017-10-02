@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_180dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center|left"
+            android:orientation="vertical"
+            android:padding="@dimen/dimens_8dp">
+
+            <com.amplifire.traves.widget.CircleImageView
+                android:id="@+id/image_avatar"
+                android:layout_width="@dimen/dimens_64dp"
+                android:layout_height="@dimen/dimens_64dp"
+                android:layout_margin="@dimen/dimens_8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_default_profil_pict" />
+
+            <TextView
+                android:id="@+id/text_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                tools:text="Username" />
+
+            <TextView
+                android:id="@+id/text_description"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/white"
+                tools:text="LOREN" />
+
+
+        </LinearLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/drawer_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/items_drawer" />
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/text_Logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingBottom="@dimen/dimens_32dp"
+        android:paddingLeft="@dimen/dimens_16dp"
+        android:paddingTop="@dimen/dimens_32dp"
+        android:text="@string/text_logout"
+        android:textColor="@color/black" />
+
+
+</RelativeLayout>
