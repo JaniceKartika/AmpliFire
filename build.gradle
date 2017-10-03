@@ -36,7 +36,7 @@ ext {
     daggerVersion = '2.11'
 
     butterknifeVersion = '8.2.1'
-
+    multiDexVersion = '1.0.0'
     facebookVersion = '4.26.0'
     fontawesomeVersion = '2.1.1'
 
