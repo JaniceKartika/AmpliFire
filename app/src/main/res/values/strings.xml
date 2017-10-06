@@ -30,4 +30,5 @@
 
     <string name="text_point">Point</string>
     <string name="text_description">Description</string>
+    <string name="points">%s pts</string>
 </resources>

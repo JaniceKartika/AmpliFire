@@ -8,7 +8,7 @@
         android:layout_gravity="center"
         android:layout_width="@dimen/dimens_72dp"
         android:layout_height="@dimen/dimens_72dp"
-        android:src="@drawable/ic_check"/>
+        android:srcCompat="@drawable/ic_check"/>
 
     <TextView
         android:layout_width="wrap_content"
