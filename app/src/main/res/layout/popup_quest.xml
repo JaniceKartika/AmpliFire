@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
-        android:layout_marginTop="@dimen/dimens_16dp"
-        android:layout_gravity="center"
         android:layout_width="@dimen/dimens_72dp"
         android:layout_height="@dimen/dimens_72dp"
+<<<<<<< HEAD
         android:srcCompat="@drawable/ic_check"/>
+=======
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dimens_16dp"
+        app:srcCompat="@drawable/ic_check" />
+>>>>>>> f4f59d6f3a122b07f75e2c8299024bd7ce370a3d
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dimens_32dp"
         android:text="@string/success"
         android:textAllCaps="true"
-        android:layout_marginTop="@dimen/dimens_4dp"
-        android:textAppearance="?android:textAppearanceLarge"/>
+        android:textAppearance="?android:textAppearanceLarge" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dimens_4dp"
-        android:text="@string/congrats"/>
+        android:text="@string/congrats" />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="@dimen/dimens_64dp"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Points earned: 200 "/>
+        android:text="Points earned: 200 " />
 
 </LinearLayout>

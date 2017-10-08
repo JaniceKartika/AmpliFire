@@ -123,7 +123,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <Button
-        android:id="@+id/btnSubmit"
+        android:id="@+id/btn_submit"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"

@@ -16,6 +16,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        multiDexEnabled true
     }
     compileOptions {
         targetCompatibility 1.8
@@ -75,6 +76,11 @@ dependencies {
     compile "com.facebook.android:facebook-android-sdk:$rootProject.facebookVersion"
 
     compile "com.google.android.gms:play-services-auth:$rootProject.playServiceVersion"
+    compile "com.google.android.gms:play-services:$rootProject.playServiceVersion"
+    compile "com.google.android.gms:play-services-maps:$rootProject.playServiceVersion"
+    compile "com.google.maps.android:android-maps-utils:$rootProject.mapsUtils"
+
+
 
     compile "com.firebase:firebase-client-android:$rootProject.fireClient"
 
@@ -98,6 +104,7 @@ dependencies {
     compile "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
 
+    compile "com.android.support:multidex:$rootProject.multiDexVersion"
 }
 
 

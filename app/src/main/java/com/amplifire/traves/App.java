@@ -1,5 +1,7 @@
 package com.amplifire.traves;
 
+import android.support.multidex.MultiDex;
+
 import com.amplifire.traves.di.AppComponent;
 import com.amplifire.traves.di.DaggerAppComponent;
 import com.crashlytics.android.Crashlytics;
@@ -24,6 +26,8 @@ public class App extends DaggerApplication implements HasActivityInjector {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Fabric.with(this, new Crashlytics());
         Iconify.with(new FontAwesomeModule());
+        MultiDex.install(this);
+
     }
 
     @Override
