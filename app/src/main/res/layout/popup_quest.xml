@@ -8,13 +8,9 @@
     <ImageView
         android:layout_width="@dimen/dimens_72dp"
         android:layout_height="@dimen/dimens_72dp"
-<<<<<<< HEAD
-        android:srcCompat="@drawable/ic_check"/>
-=======
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dimens_16dp"
         app:srcCompat="@drawable/ic_check" />
->>>>>>> f4f59d6f3a122b07f75e2c8299024bd7ce370a3d
 
     <TextView
         android:layout_width="wrap_content"

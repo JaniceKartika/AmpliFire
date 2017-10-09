@@ -130,11 +130,11 @@
         android:id="@+id/btn_submit"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
         android:background="@color/colorPrimary"
         android:gravity="center"
         android:text="Start Quest"
-        android:textColor="#ffffff" />
+        android:textColor="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
