@@ -46,12 +46,6 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
     @BindView(R.id.textViewPass)
     IconTextView textViewPass;
 
-    //google
-    private GoogleApiClient mGoogleApiClient;
-    private static final int RC_SIGN_IN = 9001;
-
-
-
 
     @Inject
     SignInPresenter mSignInPresenter;
@@ -196,11 +190,7 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
 
     @Override
     public void showAlert(boolean isShow) {
-        if (isShow) {
-            AlertLoadingFragment.showAlert(this);
-        } else {
-            AlertLoadingFragment.setDismiss(this);
-        }
+        super.showAlert(isShow);
     }
 
     @Override

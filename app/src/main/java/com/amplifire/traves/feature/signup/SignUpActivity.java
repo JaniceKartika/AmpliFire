@@ -103,11 +103,7 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
 
     @Override
     public void showAlert(boolean isShow) {
-        if (isShow) {
-            AlertLoadingFragment.showAlert(this);
-        } else {
-            AlertLoadingFragment.setDismiss(this);
-        }
+        super.showAlert(isShow);
     }
 
     @Override
@@ -129,7 +125,6 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
         super.onResume();
         mSignUpPresenter.takeView(this);
     }
-
 
 
 }

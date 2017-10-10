@@ -71,6 +71,10 @@ dependencies {
 
 //    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
+    compile "io.reactivex:rxandroid:$rootProject.ext.rxAndroidVersion"
+    compile "io.reactivex:rxjava:$rootProject.ext.rxJavaVersion"
+
+
     compile "com.joanzapata.iconify:android-iconify-fontawesome:$rootProject.fontawesomeVersion"
 
     compile "com.facebook.android:facebook-android-sdk:$rootProject.facebookVersion"

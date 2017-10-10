@@ -9,9 +9,11 @@ import com.amplifire.traves.feature.base.BaseView;
 
 public interface MainContract {
     interface View extends BaseView<MainContract.Presenter> {
-
+        void showQuestLocation();
     }
 
     interface Presenter extends BasePresenter<MainContract.View> {
+        void callNearQuestLocation();
     }
+
 }

@@ -40,6 +40,9 @@ ext {
     facebookVersion = '4.26.0'
     fontawesomeVersion = '2.1.1'
 
+    rxAndroidVersion = '1.2.1'
+    rxJavaVersion = '1.1.6'
+
 }
 
 

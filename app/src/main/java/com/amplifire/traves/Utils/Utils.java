@@ -15,17 +15,21 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class Utils {
 
-    private void signOut(GoogleApiClient mGoogleApiClient) {
+    public static void signOut(GoogleApiClient mGoogleApiClient) {
         // Firebase sign out
         FirebaseAuth.getInstance().signOut();
         // Google sign out
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
 
-                    }
-                });
+
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+//        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+//                new ResultCallback<Status>() {
+//                    @Override
+//                    public void onResult(@NonNull Status status) {
+//
+//                    }
+//                });
+        }
     }
 
     public static boolean isValidEmail(String email) {

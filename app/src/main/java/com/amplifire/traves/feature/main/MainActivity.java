@@ -5,15 +5,27 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.amplifire.traves.R;
+import com.amplifire.traves.Utils.Utils;
 import com.amplifire.traves.feature.base.BaseActivity;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MainContract.View {
+
+    @Inject
+    MainPresenter mMainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
     }
 
     public static void startThisActivity(Context context) {
@@ -22,4 +34,32 @@ public class MainActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    @Override
+    public void showAlert(boolean isShow) {
+        super.showAlert(isShow);
+    }
+
+
+    @Override
+    public void showQuestLocation() {
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMainPresenter.takeView(this);
+    }
+
+
+    private void logout() {
+        //todo alert if wanna logout
+        Utils.signOut(mGoogleApiClient);
+    }
+
+    @OnClick(R.id.text_Logout)
+    public void onViewClicked() {
+        logout();
+    }
 }

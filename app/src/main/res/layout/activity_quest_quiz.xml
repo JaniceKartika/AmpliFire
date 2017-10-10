@@ -5,15 +5,16 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        android:layout_margin="5dp"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="1">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/activity_horizontal_margin">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -53,56 +54,60 @@
             </LinearLayout>
 
             <TextView
+                style="@style/TextAppearance.AppCompat.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                style="@style/TextAppearance.AppCompat.Large"/>
+                android:text="Description" />
+
             <TextView
+                android:id="@+id/txt_desc_quiz"
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txt_desc_quiz"
-                android:text="isi description"
                 android:layout_marginTop="5dp"
-                style="@style/TextAppearance.AppCompat.Body1"/>
+                android:text="isi description" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
-        android:layout_margin="5dp"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="1">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="@dimen/activity_horizontal_margin">
+
             <TextView
+                style="@style/TextAppearance.AppCompat.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Task"
-                style="@style/TextAppearance.AppCompat.Large"/>
+                android:text="Task" />
+
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Description task"
-                android:layout_marginTop="5dp"
                 android:id="@+id/txt_taskDesc_quiz"
-                style="@style/TextAppearance.AppCompat.Body1"/>
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Description task" />
+
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </android.support.v7.widget.RecyclerView>
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
     <Button
+        style="@style/MyButton.Red"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:background="@color/colorPrimary"
         android:layout_marginTop="5dp"
-        android:text="Submit"/>
+        android:text="@string/submit"
+         />
 
 </LinearLayout>
