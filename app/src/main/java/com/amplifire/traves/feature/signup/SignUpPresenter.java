@@ -19,12 +19,26 @@ package com.amplifire.traves.feature.signup;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
+import com.amplifire.traves.feature.FirebaseUtils;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
+import java.util.List;
+
 import javax.inject.Inject;
+
+import rx.Observable;
+import rx.Observer;
+import rx.schedulers.Schedulers;
+
+import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 final class SignUpPresenter implements SignUpContract.Presenter {
 
@@ -36,6 +50,9 @@ final class SignUpPresenter implements SignUpContract.Presenter {
 
     }
 
+    @Inject
+    public FirebaseUtils firebaseUtils;
+
     @Override
     public void createUserEmail(String email, String password) {
         mSignUpView.showAlert(true);
@@ -43,7 +60,7 @@ final class SignUpPresenter implements SignUpContract.Presenter {
                 .addOnCompleteListener((Activity) mSignUpView, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        //todo save to fire database
+                        firebaseUtils.createUser(task);
                         mSignUpView.registerResult(task);
                     }
                 });

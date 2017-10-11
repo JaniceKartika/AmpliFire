@@ -2,16 +2,17 @@ package com.amplifire.traves.feature.base;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.amplifire.traves.R;
-import com.amplifire.traves.Utils.FirebaseUtils;
-import com.amplifire.traves.feature.signin.SignInActivity;
+import com.amplifire.traves.feature.FirebaseUtils;
+import com.amplifire.traves.widget.AlertLoadingFragment;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
 
@@ -20,6 +21,14 @@ public class BaseActivity extends DaggerAppCompatActivity {
     public Toolbar toolbar;
     public FirebaseAuth mAuth;
     public FirebaseAuth.AuthStateListener mAuthListener;
+
+    //google
+    public GoogleApiClient mGoogleApiClient;
+    public static final int RC_SIGN_IN = 9001;
+
+
+    @Inject
+    public FirebaseUtils mFirebaseUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +71,18 @@ public class BaseActivity extends DaggerAppCompatActivity {
         }
     }
 
+    public void showAlert(boolean isShow) {
+        if (isShow) {
+            AlertLoadingFragment.showAlert(this);
+        } else {
+            AlertLoadingFragment.setDismiss(this);
+        }
+    }
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUtils.Log(this.getClass().getSimpleName(), FirebaseUtils.ENTER);
+        mFirebaseUtils.Log(this.getClass().getSimpleName(), mFirebaseUtils.ENTER);
         if (mAuthListener != null) {
             mAuth.addAuthStateListener(mAuthListener);
         }
@@ -75,7 +91,7 @@ public class BaseActivity extends DaggerAppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        FirebaseUtils.Log(this.getClass().getSimpleName(), FirebaseUtils.CLOSE);
+        mFirebaseUtils.Log(this.getClass().getSimpleName(), mFirebaseUtils.CLOSE);
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }

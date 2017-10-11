@@ -18,16 +18,31 @@ package com.amplifire.traves.feature.main;
 
 import android.support.annotation.Nullable;
 
-final class MainPresenter implements MainContract.Presenter {
+import com.amplifire.traves.feature.FirebaseUtils;
 
+import javax.inject.Inject;
+
+final class MainPresenter implements MainContract.Presenter {
 
     @Nullable
     private MainContract.View mMainView;
 
-    @Override
-    public void takeView(MainContract.View view) {
+    @Inject
+    public MainPresenter() {
 
     }
 
+    @Inject
+    public FirebaseUtils mFirebaseUtils;
 
+    @Override
+    public void takeView(MainContract.View view) {
+        mMainView = view;
+    }
+
+
+    @Override
+    public void callNearQuestLocation() {
+        mFirebaseUtils.childListener(mFirebaseUtils.LOCATION);
+    }
 }
