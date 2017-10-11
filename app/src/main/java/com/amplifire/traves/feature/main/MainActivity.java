@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.amplifire.traves.R;
-import com.amplifire.traves.Utils.Utils;
+import com.amplifire.traves.utils.Utils;
 import com.amplifire.traves.feature.base.BaseActivity;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import javax.inject.Inject;
 

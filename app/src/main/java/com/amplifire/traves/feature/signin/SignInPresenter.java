@@ -115,7 +115,7 @@ final class SignInPresenter implements SignInContract.Presenter {
 
 
     private void signInSuccess(Task<AuthResult> task){
-        firebaseUtils.createOrUpdateUser(task);
+        firebaseUtils.createUser(task);
         mSignInView.signInSuccess();
     }
 

@@ -1,12 +1,8 @@
-package com.amplifire.traves.Utils;
+package com.amplifire.traves.utils;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**

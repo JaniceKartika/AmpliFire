@@ -43,6 +43,8 @@ public class FirebaseUtils {
     public static String STATUS = "status";
     public static String USER = "user";
 
+    public static String CREATE = "CREATE";
+    public static String UPDATE = "UPDATE";
 
     @Inject
     public FirebaseUtils() {
@@ -58,13 +60,16 @@ public class FirebaseUtils {
     }
 
 
-    public void createOrUpdateUser(Task<AuthResult> task) {
-        Firebase ref = (Firebase) getData(USER, null, null);
-        ref.addValueEventListener(valueEventListener(task));
+    public void createUser(Task<AuthResult> task) {
+        createOrUpdateUser(task, CREATE, null);
     }
 
+    public void updateUser(Task<AuthResult> task, HashMap<String, Object> map) {
+        createOrUpdateUser(task, UPDATE, map);
+    }
 
-    private ValueEventListener valueEventListener(Task<AuthResult> task) {
+    public void createOrUpdateUser(Task<AuthResult> task, String type, HashMap<String, Object> map) {
+        Firebase ref = (Firebase) getData(USER, null, null);
         String email = task.getResult().getUser().getEmail();
         String name = task.getResult().getUser().getDisplayName();
 
@@ -73,8 +78,7 @@ public class FirebaseUtils {
         }
 
         String finalName = name;
-
-        return new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Observable.from(dataSnapshot.getChildren())
@@ -105,8 +109,15 @@ public class FirebaseUtils {
 
                                        @Override
                                        public void onNext(List<DataSnapshot> dataSnapshots) {
-                                           if (dataSnapshots.size() == 0) {
-                                               createUser(email, finalName);
+                                           if (type.equals(CREATE)) {
+                                               if (dataSnapshots.size() == 0) {
+                                                   HashMap<String, Object> map = new HashMap<String, Object>();
+                                                   map.put("email", email);
+                                                   map.put("name", finalName);
+                                                   updateFirebase(USER, null, null, map);
+                                               }
+                                           } else {
+                                               updateFirebase(USER, null, dataSnapshots.get(0).getKey(), map);
                                            }
                                        }
                                    }
@@ -117,21 +128,16 @@ public class FirebaseUtils {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+
             }
-        };
+        });
     }
-    
-    public void createUser(String email, String name) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("email", email);
-        map.put("name", name);
-        updateFirebase(USER, null, null, map);
-    }
-    
+
+
     public Query getData(String path, String orderByChild, String equalTo) {
 
 //example : new Firebase(BASE_API + "location").orderByChild(orderByChild).equalTo(equalTo);
-        Query query = new Firebase(BASE_API+ path);
+        Query query = new Firebase(BASE_API + path);
         if (!TextUtils.isEmpty(orderByChild)) {
             query.orderByChild(orderByChild);
         }
@@ -172,7 +178,7 @@ public class FirebaseUtils {
 
         Firebase ref = (Firebase) getData(path, orderByChild, equalTo);
         HashMap<String, Object> push = new HashMap<String, Object>();
-        push.put(ref.push().getKey(),map);
+        push.put(ref.push().getKey(), map);
         ref.updateChildren(push);
     }
 

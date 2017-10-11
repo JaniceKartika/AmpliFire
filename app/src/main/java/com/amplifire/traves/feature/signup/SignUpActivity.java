@@ -8,9 +8,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.amplifire.traves.R;
-import com.amplifire.traves.Utils.Utils;
+import com.amplifire.traves.utils.Utils;
 import com.amplifire.traves.feature.base.BaseActivity;
-import com.amplifire.traves.widget.AlertLoadingFragment;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 

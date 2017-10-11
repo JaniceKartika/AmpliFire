@@ -60,7 +60,7 @@ final class SignUpPresenter implements SignUpContract.Presenter {
                 .addOnCompleteListener((Activity) mSignUpView, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        firebaseUtils.createOrUpdateUser(task);
+                        firebaseUtils.createUser(task);
                         mSignUpView.registerResult(task);
                     }
                 });
@@ -70,7 +70,6 @@ final class SignUpPresenter implements SignUpContract.Presenter {
     public void takeView(SignUpContract.View view) {
         mSignUpView = view;
     }
-
 
 
 }

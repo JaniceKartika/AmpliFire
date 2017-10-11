@@ -1,4 +1,4 @@
-package com.amplifire.traves.Utils;
+package com.amplifire.traves.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

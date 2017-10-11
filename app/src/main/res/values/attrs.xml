@@ -6,4 +6,11 @@
         <attr name="civ_border_overlay" format="boolean" />
         <attr name="civ_fill_color" format="color" />
     </declare-styleable>
+
+
+    <declare-styleable name="ImageViewMeasurement">
+        <attr name="width_divider" format="integer" />
+        <attr name="height_divider" format="integer" />
+        <attr name="measure_with_height" format="boolean" />
+    </declare-styleable>
 </resources>

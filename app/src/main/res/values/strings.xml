@@ -34,10 +34,12 @@
     <string name="text_help">Help</string>
     <string name="text_my">My</string>
     <string name="text_description">Description</string>
-    <string name="points">%s pts</string>
+    <string name="text_pts">pts</string>
 
     <string name="start_quest">Start Quest</string>
     <string name="submit">Submit</string>
     <string name="text_logout">Logout</string>
+
+    <string name="text_confirmation_code">Kode Konfirmasi</string>
 >>>>>>> f4f59d6f3a122b07f75e2c8299024bd7ce370a3d
 </resources>
