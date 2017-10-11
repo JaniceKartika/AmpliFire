@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimens_8dp"
                     android:layout_marginRight="@dimen/dimens_4dp"
-                    android:hint="@string/text_email_address"
+                    android:hint="@string/text_password"
                     android:layout_toStartOf="@+id/textViewPass">
 
                     <android.support.design.widget.TextInputEditText
