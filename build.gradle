@@ -42,7 +42,7 @@ ext {
 
     rxAndroidVersion = '1.2.1'
     rxJavaVersion = '1.1.6'
-
+    EventBusVersion = '3.0.0'
 }
 
 

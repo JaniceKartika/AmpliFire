@@ -17,8 +17,13 @@
 package com.amplifire.traves.feature.main;
 
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.amplifire.traves.feature.FirebaseUtils;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -40,6 +45,11 @@ final class MainPresenter implements MainContract.Presenter {
         mMainView = view;
     }
 
+
+    @Override
+    public void setDrawer() {
+
+    }
 
     @Override
     public void callNearQuestLocation() {

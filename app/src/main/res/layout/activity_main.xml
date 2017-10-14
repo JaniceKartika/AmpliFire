@@ -47,6 +47,8 @@
 
         </RelativeLayout>
 
+
+        <!-- Drawer -->
         <RelativeLayout
             android:id="@+id/navigation"
             android:layout_width="match_parent"

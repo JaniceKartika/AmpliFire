@@ -13,6 +13,7 @@ public interface MainContract {
     }
 
     interface Presenter extends BasePresenter<MainContract.View> {
+        void setDrawer();
         void callNearQuestLocation();
     }
 

@@ -6,8 +6,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.amplifire.traves.App;
+import com.amplifire.traves.eventbus.GetUserEvent;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.model.UserDao;
+import com.amplifire.traves.utils.PrefHelper;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -17,6 +19,8 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +46,8 @@ public class FirebaseUtils {
     public static String QUEST = "quest";
     public static String STATUS = "status";
     public static String USER = "user";
+    public static String EMAIL = "email";
+    public static String POINT = "point";
 
     public static String CREATE = "CREATE";
     public static String UPDATE = "UPDATE";
@@ -84,8 +90,8 @@ public class FirebaseUtils {
                 Observable.from(dataSnapshot.getChildren())
                         .subscribeOn(Schedulers.newThread())
                         .filter(data -> {
-                            if (data.child("email").exists()) {
-                                if (data.child("email").getValue().equals(email)) {
+                            if (data.child(EMAIL).exists()) {
+                                if (data.child(EMAIL).getValue().equals(email)) {
                                     return true;
                                 } else {
                                     return false;
@@ -119,6 +125,55 @@ public class FirebaseUtils {
                                            } else {
                                                updateFirebase(USER, null, dataSnapshots.get(0).getKey(), map);
                                            }
+                                       }
+                                   }
+                        );
+
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+
+    public void getUser(String email) {
+        Firebase ref = (Firebase) getData(USER, null, null);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Observable.from(dataSnapshot.getChildren())
+                        .subscribeOn(Schedulers.newThread())
+                        .filter(data -> {
+                            if (data.child(EMAIL).exists()) {
+                                if (data.child(EMAIL).getValue().equals(email)) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            } else {
+                                return false;
+                            }
+                        })
+                        .observeOn(mainThread())
+                        .subscribe(new Observer<DataSnapshot>() {
+                                       @Override
+                                       public void onCompleted() {
+
+                                       }
+
+                                       @Override
+                                       public void onError(Throwable e) {
+
+                                       }
+
+                                       @Override
+                                       public void onNext(DataSnapshot dataSnapshots) {
+                                           EventBus.getDefault().post(new GetUserEvent(dataSnapshots));
                                        }
                                    }
                         );

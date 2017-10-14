@@ -12,6 +12,8 @@ import com.google.firebase.auth.FirebaseAuth;
 public class Utils {
 
     public static void signOut(GoogleApiClient mGoogleApiClient) {
+        //todo alert if wanna logout
+
         // Firebase sign out
         FirebaseAuth.getInstance().signOut();
         // Google sign out

@@ -109,6 +109,8 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
 
     compile "com.android.support:multidex:$rootProject.multiDexVersion"
+
+    compile "org.greenrobot:eventbus:$rootProject.EventBusVersion"
 }
 
 
