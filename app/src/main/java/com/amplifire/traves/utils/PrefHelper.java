@@ -2,11 +2,17 @@ package com.amplifire.traves.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.google.android.gms.maps.model.LatLng;
+
 
 public class PrefHelper {
+    public static String LATITUDE = "LATITUDE";
+    public static String LONGITUDE = "LONGITUDE";
+
     public static SharedPreferences getPref(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
@@ -34,6 +40,27 @@ public class PrefHelper {
 
     }
 
+    public static void saveLocation(Context context, Location location) {
+        saveToPref(context, LATITUDE, location.getLatitude() + "");
+        saveToPref(context, LONGITUDE, location.getLongitude() + "");
+    }
+
+    public static LatLng getLocation(Context context) {
+        double latitude = 0;
+        double longitude = 0;
+        try {
+            latitude = Double.parseDouble(getPref(context, LATITUDE));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        try {
+            longitude = Double.parseDouble(getPref(context, LONGITUDE));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        return new LatLng(latitude, longitude);
+    }
 
     public static boolean isPrefNotEmpty(Context context, String string) {
         return !TextUtils.isEmpty(getPref(context).getString(string, null));

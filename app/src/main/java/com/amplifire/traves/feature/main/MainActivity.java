@@ -1,27 +1,37 @@
 package com.amplifire.traves.feature.main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.eventbus.GetUserEvent;
-import com.amplifire.traves.feature.FirebaseUtils;
+import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.feature.base.BaseActivity;
 import com.amplifire.traves.model.DrawerDao;
+import com.amplifire.traves.utils.PrefHelper;
 import com.amplifire.traves.utils.Utils;
 import com.amplifire.traves.widget.CircleImageView;
 import com.firebase.client.DataSnapshot;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -33,15 +43,12 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 
-
-public class MainActivity extends BaseActivity implements MainContract.View, DrawerAdapter.DrawerView {
-
-    @Inject
-    MainPresenter mMainPresenter;
-
-    @BindView(R.id.home_recycler)
-    RecyclerView homeRecycler;
+@RuntimePermissions
+public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerView,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
     //drawer
@@ -58,6 +65,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Dra
     private List<DrawerDao> drawerDaos = new ArrayList<>();
     private DrawerAdapter mAdapter;
 
+    @BindView(R.id.frameLayout)
+    FrameLayout frameLayout;
 
     @Inject
     public FirebaseUtils firebaseUtils;
@@ -89,7 +98,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Dra
         } else {
             drawer.openDrawer(GravityCompat.START);
         }
-
     }
 
 
@@ -100,6 +108,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Dra
         ButterKnife.bind(this);
 
         setDrawer();
+        setFragment(0);
 
     }
 
@@ -109,16 +118,11 @@ public class MainActivity extends BaseActivity implements MainContract.View, Dra
         context.startActivity(intent);
     }
 
-    @Override
+
     public void showAlert(boolean isShow) {
         super.showAlert(isShow);
     }
 
-
-    @Override
-    public void showQuestLocation() {
-
-    }
 
     private void setDrawer() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -138,9 +142,16 @@ public class MainActivity extends BaseActivity implements MainContract.View, Dra
 
     @Override
     public void drawerSelect(int position) {
-        Log.wtf("Test_", position + "");
+        setFragment(position);
+    }
+
+
+    public void setFragment(int position) {
+        drawer.closeDrawers();
+        Fragment fragment = null;
         switch (position) {
             case 0: //point
+                fragment = QuestListFragment.newInstance();
                 break;
             case 1: //quest
                 break;
@@ -151,14 +162,12 @@ public class MainActivity extends BaseActivity implements MainContract.View, Dra
             case 4: //help
                 break;
         }
+        if (fragment != null) {
+            FragmentTransaction fm = MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment);
+            fm.commit();
+            MainActivity.this.invalidateOptionsMenu();
+        }
 
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMainPresenter.takeView(this);
     }
 
 
@@ -189,4 +198,24 @@ public class MainActivity extends BaseActivity implements MainContract.View, Dra
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    public void onConnected(@Nullable Bundle bundle) {
+        LocationServices.getFusedLocationProviderClient(this).getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                PrefHelper.saveLocation(MainActivity.this, location);
+            }
+        });
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }

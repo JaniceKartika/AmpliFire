@@ -1,21 +1,16 @@
 package com.amplifire.traves;
 
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
 import com.amplifire.traves.di.AppComponent;
 import com.amplifire.traves.di.DaggerAppComponent;
 import com.crashlytics.android.Crashlytics;
 import com.firebase.client.Firebase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
-
-import java.util.concurrent.Executor;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;

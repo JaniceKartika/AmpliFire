@@ -111,6 +111,10 @@ dependencies {
     compile "com.android.support:multidex:$rootProject.multiDexVersion"
 
     compile "org.greenrobot:eventbus:$rootProject.EventBusVersion"
+
+    compile "com.github.hotchemi:permissionsdispatcher:$rootProject.permissionsdispatcherVersion"
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$rootProject.permissionsdispatcherVersion"
+
 }
 
 

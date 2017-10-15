@@ -20,7 +20,7 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.amplifire.traves.feature.FirebaseUtils;
+import com.amplifire.traves.utils.FirebaseUtils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -105,6 +105,7 @@ final class SignInPresenter implements SignInContract.Presenter {
                         } else {
                             mSignInView.signInFailed();
                         }
+
                     }
                 });
     }

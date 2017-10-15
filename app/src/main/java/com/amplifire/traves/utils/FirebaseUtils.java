@@ -1,15 +1,10 @@
-package com.amplifire.traves.feature;
+package com.amplifire.traves.utils;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amplifire.traves.App;
 import com.amplifire.traves.eventbus.GetUserEvent;
-import com.amplifire.traves.model.LocationDao;
-import com.amplifire.traves.model.UserDao;
-import com.amplifire.traves.utils.PrefHelper;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -52,6 +47,13 @@ public class FirebaseUtils {
     public static String CREATE = "CREATE";
     public static String UPDATE = "UPDATE";
 
+    public static int ADD = 0;
+    public static int CHANGE = 1;
+    public static int REMOVE = 2;
+    public static int MOVED = 3;
+    public static int CANCEL = 4;
+
+
     @Inject
     public FirebaseUtils() {
     }
@@ -64,7 +66,6 @@ public class FirebaseUtils {
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, event);
         App.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
-
 
     public void createUser(Task<AuthResult> task) {
         createOrUpdateUser(task, CREATE, null);
@@ -255,42 +256,51 @@ public class FirebaseUtils {
         };
     }
 
-    public ChildEventListener childListener(String type) {
+
+    public static ChildEventListener childListener(String type, ChildSnapshootListener childSnapshootListener) {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (type.equals(LOCATION)) {
-                    LocationDao locationDao = dataSnapshot.getValue(LocationDao.class);
-                }
+                childSnapshootListener.onChildAdded(dataSnapshot, s);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //todo
+                childSnapshootListener.onChildChanged(dataSnapshot, s);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //todo
+                childSnapshootListener.onChildRemoved(dataSnapshot);
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                //todo
+                childSnapshootListener.onChildMoved(dataSnapshot, s);
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                //todo
+                childSnapshootListener.onCancelled(firebaseError);
             }
         };
 
     }
 
-
     public void removeListener(Firebase ref, ChildEventListener childEventListener) {
         ref.removeEventListener(childEventListener);
     }
 
+    public interface ChildSnapshootListener {
+        void onChildAdded(DataSnapshot dataSnapshot, String s);
+
+        void onChildChanged(DataSnapshot dataSnapshot, String s);
+
+        void onChildRemoved(DataSnapshot dataSnapshot);
+
+        void onChildMoved(DataSnapshot dataSnapshot, String s);
+
+        void onCancelled(FirebaseError firebaseError);
+    }
 
 }

@@ -2,12 +2,11 @@ package com.amplifire.traves.feature.base;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.eventbus.GetUserEvent;
-import com.amplifire.traves.feature.FirebaseUtils;
+import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.feature.signin.SignInActivity;
 import com.amplifire.traves.widget.AlertLoadingFragment;
 import com.google.android.gms.common.api.GoogleApiClient;
