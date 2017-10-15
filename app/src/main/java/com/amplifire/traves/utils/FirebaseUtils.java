@@ -47,12 +47,15 @@ public class FirebaseUtils {
     public static String CREATE = "CREATE";
     public static String UPDATE = "UPDATE";
 
+    //child listener
     public static int ADD = 0;
     public static int CHANGE = 1;
     public static int REMOVE = 2;
     public static int MOVED = 3;
     public static int CANCEL = 4;
 
+    //config
+    public static String RADIUS = "radius";
 
     @Inject
     public FirebaseUtils() {

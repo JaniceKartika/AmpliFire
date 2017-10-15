@@ -20,11 +20,15 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.amplifire.traves.App;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.utils.FirebaseUtils;
+import com.amplifire.traves.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import javax.inject.Inject;
 
@@ -61,10 +65,11 @@ final class QuestListPresenter implements MainContract.QuestPresenter, FirebaseU
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        mQuestView.addData(setLocationDao(dataSnapshot));
+        LocationDao locationDao = setLocationDao(dataSnapshot);
+        mQuestView.addData(locationDao);
+
         if (runnable != null)
             handler.removeCallbacks(runnable);
-
         runnable = new Runnable() {
             @Override
             public void run() {

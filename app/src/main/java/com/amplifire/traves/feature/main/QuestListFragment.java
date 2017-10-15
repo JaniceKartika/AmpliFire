@@ -1,5 +1,6 @@
 package com.amplifire.traves.feature.main;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,8 +12,11 @@ import android.view.ViewGroup;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
+import com.amplifire.traves.feature.adapter.QuestListAdapter;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.utils.FirebaseUtils;
+import com.amplifire.traves.utils.Utils;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +85,6 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
         mAdapter.notifyDataSetChanged();
     }
 
-
     @Override
     public void showAlert(boolean isShow) {
         ((MainActivity) getActivity()).showAlert(isShow);
@@ -101,8 +104,10 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
 
     @Override
     public void addData(LocationDao locationDao) {
-        locationDaos.add(locationDao);
-        mAdapter.notifyDataSetChanged();
+        if (Utils.isOnRange(getContext(), new LatLng(locationDao.getLatitude(), locationDao.getLongitude()))) {
+            locationDaos.add(locationDao);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

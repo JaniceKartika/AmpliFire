@@ -1,4 +1,4 @@
-package com.amplifire.traves.feature.main;
+package com.amplifire.traves.feature.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amplifire.traves.R;
@@ -61,7 +60,7 @@ public class QuestListAdapter extends RecyclerView.Adapter<QuestListAdapter.MyVi
         final LocationDao dao = locationDaos.get(position);
         //todo
         holder.ivThumbnail.setImageResource(0);
-        holder.tvTitle.setText(dao.getAddress());
+        holder.tvTitle.setText(dao.getName());
         holder.tvTotalQuest.setText(context.getString(R.string.text_total) + " " + context.getString(R.string.text_quest) + " " + dao.getQuest().size());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
