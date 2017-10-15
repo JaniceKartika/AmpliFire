@@ -49,17 +49,16 @@ final class QuestListPresenter implements MainContract.QuestPresenter, FirebaseU
     public FirebaseUtils firebaseUtils;
 
     @Override
-    public void nearQuest() {
+    public void getLocation() {
         mQuestView.showAlert(true);
         Firebase ref = (Firebase) firebaseUtils.getData(firebaseUtils.LOCATION, null, null);
-        ref.addChildEventListener(firebaseUtils.childListener(firebaseUtils.LOCATION, this));
+        ref.addChildEventListener(firebaseUtils.childListener(this));
     }
-
 
     @Override
     public void takeView(MainContract.QuestView view) {
         mQuestView = view;
-        nearQuest();
+        getLocation();
     }
 
 

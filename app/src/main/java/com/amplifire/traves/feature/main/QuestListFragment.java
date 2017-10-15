@@ -15,7 +15,9 @@ import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
 import com.amplifire.traves.feature.adapter.QuestListAdapter;
 import com.amplifire.traves.model.LocationDao;
+import com.amplifire.traves.model.UserDao;
 import com.amplifire.traves.utils.FirebaseUtils;
+import com.amplifire.traves.utils.PrefHelper;
 import com.amplifire.traves.utils.Utils;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -53,6 +55,7 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
     private QuestListAdapter mAdapter;
 
     Unbinder unbinder;
+    private UserDao userDao;
 
     @Inject
     public QuestListFragment() {
@@ -72,9 +75,15 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, root);
-        mPresenter.takeView(this);
+        userDao = getUserData();
         init();
+        mPresenter.takeView(this);
         return root;
+    }
+
+    @Override
+    public UserDao getUserData() {
+        return  PrefHelper.getUser(getContext());
     }
 
     private void init() {

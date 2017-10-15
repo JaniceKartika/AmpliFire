@@ -13,9 +13,12 @@ import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
 import com.amplifire.traves.feature.adapter.QuestListAdapter;
 import com.amplifire.traves.model.LocationDao;
+import com.amplifire.traves.model.UserDao;
 import com.amplifire.traves.utils.FirebaseUtils;
+import com.amplifire.traves.utils.PrefHelper;
 import com.amplifire.traves.utils.Utils;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +50,9 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.Ques
     private List<LocationDao> locationDaos = new ArrayList<>();
     private QuestListAdapter mAdapter;
 
+    private FirebaseAuth mAuth;
+    private UserDao userDao;
+
     Unbinder unbinder;
 
     @Inject
@@ -67,9 +73,16 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.Ques
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, root);
-        mPresenter.takeView(this);
+        mAuth = ((MainActivity) getActivity()).getAuth();
+        userDao = getUserData();
         init();
+        mPresenter.takeView(this);
         return root;
+    }
+
+    @Override
+    public UserDao getUserData() {
+        return PrefHelper.getUser(getContext());
     }
 
     private void init() {
@@ -79,6 +92,10 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.Ques
         mAdapter = new QuestListAdapter(this, locationDaos);
         questRecycler.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
+    }
+
+    public FirebaseAuth getAuth() {
+        return mAuth;
     }
 
     @Override

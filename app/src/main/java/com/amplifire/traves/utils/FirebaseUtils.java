@@ -37,10 +37,11 @@ public class FirebaseUtils {
     public static String ENTER = "ENTER";
     public static String CLOSE = "CLOSE";
     public static String BASE_API = "https://traves-55a1c.firebaseio.com/";
-    public static String LOCATION = "location";
-    public static String QUEST = "quest";
-    public static String STATUS = "status";
-    public static String USER = "user";
+    public static String LOCATION = "location/";
+    public static String QUEST = "quest/";
+    public static String STATUS = "status/";
+    public static String USER = "user/";
+
     public static String EMAIL = "email";
     public static String POINT = "point";
 
@@ -146,7 +147,6 @@ public class FirebaseUtils {
 
     public void getUser(String email) {
         Firebase ref = (Firebase) getData(USER, null, null);
-
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -207,11 +207,10 @@ public class FirebaseUtils {
     }
 
 
-    public void searchSingleData(String path, String orderByChild, String equalTo, String search) {
-        Firebase ref = (Firebase) getData(path, orderByChild, equalTo);
-        ref.addListenerForSingleValueEvent(valueEventListener(search));
-
-    }
+//    public void searchSingleData(String path, String orderByChild, String equalTo, String search) {
+//        Firebase ref = (Firebase) getData(path, orderByChild, equalTo);
+//        ref.addListenerForSingleValueEvent(valueEventListener(search));
+//    }
 
 
     public void updateFirebase(String path, String orderByChild, String equalTo, HashMap<String, Object> map) {
@@ -242,25 +241,24 @@ public class FirebaseUtils {
     }
 
 
-    public ValueEventListener valueEventListener(String search) {
+    public ValueEventListener valueEventListener(ValueSnapshootListener valueSnapshootListener) {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-
-                } else {
-                    //todo when data not found
+                    valueSnapshootListener.onDataChange(dataSnapshot);
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                valueSnapshootListener.onCancelled(firebaseError);
             }
         };
     }
 
 
-    public static ChildEventListener childListener(String type, ChildSnapshootListener childSnapshootListener) {
+    public static ChildEventListener childListener(ChildSnapshootListener childSnapshootListener) {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -302,6 +300,12 @@ public class FirebaseUtils {
         void onChildRemoved(DataSnapshot dataSnapshot);
 
         void onChildMoved(DataSnapshot dataSnapshot, String s);
+
+        void onCancelled(FirebaseError firebaseError);
+    }
+
+    public interface ValueSnapshootListener {
+        void onDataChange(DataSnapshot dataSnapshot);
 
         void onCancelled(FirebaseError firebaseError);
     }

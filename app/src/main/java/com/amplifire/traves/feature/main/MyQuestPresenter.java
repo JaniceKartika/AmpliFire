@@ -20,14 +20,25 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 
 import com.amplifire.traves.model.LocationDao;
+import com.amplifire.traves.model.UserDao;
 import com.amplifire.traves.utils.FirebaseUtils;
+import com.amplifire.traves.utils.PrefHelper;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.util.HashMap;
+import java.util.List;
+
 import javax.inject.Inject;
 
-final class MyQuestPresenter implements MainContract.QuestPresenter, FirebaseUtils.ChildSnapshootListener {
+import rx.Observable;
+import rx.Observer;
+import rx.schedulers.Schedulers;
+
+import static rx.android.schedulers.AndroidSchedulers.mainThread;
+
+final class MyQuestPresenter implements MainContract.QuestPresenter, FirebaseUtils.ValueSnapshootListener {
 
     private Handler handler = new Handler();
     private Runnable runnable;
@@ -44,63 +55,48 @@ final class MyQuestPresenter implements MainContract.QuestPresenter, FirebaseUti
     public FirebaseUtils firebaseUtils;
 
     @Override
-    public void nearQuest() {
-        mQuestView.showAlert(true);
-        Firebase ref = (Firebase) firebaseUtils.getData(firebaseUtils.LOCATION, null, null);
-        ref.addChildEventListener(firebaseUtils.childListener(firebaseUtils.LOCATION, this));
+    public void getLocation() {
+        UserDao userDao = mQuestView.getUserData();
+        String key = firebaseUtils.USER + userDao.getKey();
+        Firebase ref = (Firebase) firebaseUtils.getData(key, null, firebaseUtils.QUEST);
+        ref.addValueEventListener(firebaseUtils.valueEventListener(this));
     }
 
 
     @Override
     public void takeView(MainContract.QuestView view) {
         mQuestView = view;
-        nearQuest();
-    }
-
-
-    @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        LocationDao locationDao = setLocationDao(dataSnapshot);
-        mQuestView.addData(locationDao);
-
-        if (runnable != null)
-            handler.removeCallbacks(runnable);
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                mQuestView.showAlert(false);
-            }
-        };
-
-        handler.postDelayed(runnable, 1000);
-
-
+        getLocation();
     }
 
     @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        mQuestView.updateData(setLocationDao(dataSnapshot));
-    }
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        Observable.from(dataSnapshot.getChildren())
+                .subscribeOn(Schedulers.newThread())
+                .toList()
+                .observeOn(mainThread())
+                .subscribe(new Observer<List<DataSnapshot>>() {
+                               @Override
+                               public void onCompleted() {
 
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-        mQuestView.removeData(setLocationDao(dataSnapshot));
-    }
+                               }
 
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-        mQuestView.removeData(setLocationDao(dataSnapshot));
+                               @Override
+                               public void onError(Throwable e) {
+
+                               }
+
+                               @Override
+                               public void onNext(List<DataSnapshot> dataSnapshots) {
+                                   //todo call other
+                               }
+                           }
+                );
+
     }
 
     @Override
     public void onCancelled(FirebaseError firebaseError) {
 
     }
-
-    private LocationDao setLocationDao(DataSnapshot dataSnapshot) {
-        LocationDao locationDao = dataSnapshot.getValue(LocationDao.class);
-        locationDao.setKey(dataSnapshot.getKey());
-        return locationDao;
-    }
-
 }

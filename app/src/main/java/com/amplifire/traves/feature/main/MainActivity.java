@@ -36,6 +36,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -127,6 +128,9 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
         super.showAlert(isShow);
     }
 
+    public FirebaseAuth getAuth(){
+        return mAuth;
+    }
 
     private void setDrawer() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);

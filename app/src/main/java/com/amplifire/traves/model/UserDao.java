@@ -7,6 +7,7 @@ import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDao {
+    public String key;
     public String name;
     public int point;
     public String current_location;
@@ -14,6 +15,14 @@ public class UserDao {
     public String email;
     public Map<String, locationStatusDao> location;
     public Map<String, questStatusDao> quest;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getName() {
         return name;

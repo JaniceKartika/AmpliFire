@@ -63,6 +63,7 @@ dependencies {
     })
 
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+
     compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
@@ -115,6 +116,7 @@ dependencies {
     compile "com.github.hotchemi:permissionsdispatcher:$rootProject.permissionsdispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$rootProject.permissionsdispatcherVersion"
 
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.gsonVersion"
 }
 
 
