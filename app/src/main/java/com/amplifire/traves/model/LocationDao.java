@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Map;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LocationDao {
     public String address;
@@ -12,7 +11,7 @@ public class LocationDao {
     public double longitude;
     public String name;
     public Map<String, Boolean> quest;
-    public int radius;
+    public double radius;
 
     public String getAddress() {
         return address;
@@ -30,7 +29,7 @@ public class LocationDao {
         return name;
     }
 
-    public int getRadius() {
+    public double getRadius() {
         return radius;
     }
 
@@ -38,5 +37,3 @@ public class LocationDao {
         return quest;
     }
 }
-
-

@@ -6,11 +6,10 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/btnSubmit"
+        android:layout_above="@+id/btn_submit"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.AppBarLayout

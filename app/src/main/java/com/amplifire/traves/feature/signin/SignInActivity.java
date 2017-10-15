@@ -38,7 +38,6 @@ import butterknife.OnClick;
 public class SignInActivity extends BaseActivity implements SignInContract.View,
         GoogleApiClient.OnConnectionFailedListener {
 
-
     @BindView(R.id.edittextEmail)
     EditText edittextEmail;
     @BindView(R.id.edittextPassword)
@@ -46,10 +45,8 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
     @BindView(R.id.textViewPass)
     IconTextView textViewPass;
 
-
     @Inject
     SignInPresenter mSignInPresenter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +95,6 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
         }
     }
 
-
     //signin google
     private void setGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -117,7 +113,6 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -131,7 +126,6 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
             }
         }
     }
-
 
     @OnClick({R.id.login, R.id.buttonFacebook, R.id.buttonGoogle, R.id.buttonRegister})
     public void onViewClicked(View view) {
@@ -151,13 +145,11 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
         }
     }
 
-
     public static void startThisActivity(Context context) {
         Intent intent = new Intent(context, SignInActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
     }
-
 
     @Override
     public void signInSuccess() {
@@ -182,7 +174,6 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
         Toast.makeText(this, getString(R.string.text_login) + " " + getString(R.string.text_failed), Toast.LENGTH_SHORT).show();
     }
 
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -198,6 +189,4 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
         super.onResume();
         mSignInPresenter.takeView(this);
     }
-
-
 }

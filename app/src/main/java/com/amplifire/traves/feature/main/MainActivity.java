@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.amplifire.traves.R;
-import com.amplifire.traves.utils.Utils;
 import com.amplifire.traves.feature.base.BaseActivity;
+import com.amplifire.traves.utils.Utils;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 
 public class MainActivity extends BaseActivity implements MainContract.View {
 
@@ -37,19 +36,16 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         super.showAlert(isShow);
     }
 
-
     @Override
     public void showQuestLocation() {
 
     }
-
 
     @Override
     public void onResume() {
         super.onResume();
         mMainPresenter.takeView(this);
     }
-
 
     private void logout() {
         //todo alert if wanna logout

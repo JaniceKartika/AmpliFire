@@ -4,9 +4,6 @@
     <string name="text_success">Success</string>
     <string name="text_failed">Failed</string>
 
-    <string name="facebook_app_id">1917914651865621</string>
-    <string name="fb_login_protocol_scheme">fb1917914651865621</string>
-
     <string name="error_requirement">Requirement</string>
     <string name="error_confirm">Confirmation</string>
     <string name="error_wrong_format">Wrong Format</string>
@@ -41,5 +38,9 @@
     <string name="text_logout">Logout</string>
 
     <string name="text_confirmation_code">Kode Konfirmasi</string>
->>>>>>> f4f59d6f3a122b07f75e2c8299024bd7ce370a3d
+
+    <string name="quest_area">Quest Area</string>
+    <string name="directions">Directions</string>
+    <string name="location_permission_not_granted">Need location permission</string>
+    <string name="marker_position_title">You\'re here</string>
 </resources>

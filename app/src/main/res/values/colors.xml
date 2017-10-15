@@ -29,6 +29,6 @@
     <color name="grey">#9c9c9c</color>
     <color name="grey_light">#EBEBEB</color>
     <color name="grey_dark">#7b7b7b</color>
-    <color name="grey_transparant">#33000000</color>
+    <color name="grey_transparant">#333333F0</color>
 
 </resources>
