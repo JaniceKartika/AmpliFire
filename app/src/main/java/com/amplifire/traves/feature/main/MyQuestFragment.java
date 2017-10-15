@@ -1,12 +1,10 @@
 package com.amplifire.traves.feature.main;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +32,9 @@ import rx.schedulers.Schedulers;
 
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
-/**
- * Created by pratama on 10/15/2017.
- */
 
 @ActivityScoped
-public class QuestListFragment extends DaggerFragment implements MainContract.QuestView, QuestListAdapter.QuestSelect {
+public class MyQuestFragment extends DaggerFragment implements MainContract.QuestView, QuestListAdapter.QuestSelect {
 
     @Inject
     MainContract.QuestPresenter mPresenter;
@@ -55,12 +50,12 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
     Unbinder unbinder;
 
     @Inject
-    public QuestListFragment() {
+    public MyQuestFragment() {
     }
 
-    public static QuestListFragment newInstance() {
+    public static MyQuestFragment newInstance() {
         Bundle args = new Bundle();
-        QuestListFragment fragment = new QuestListFragment();
+        MyQuestFragment fragment = new MyQuestFragment();
         fragment.setArguments(args);
         return fragment;
     }

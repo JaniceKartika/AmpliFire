@@ -15,6 +15,10 @@ public abstract class MainModule {
     @ContributesAndroidInjector
     abstract QuestListFragment questListFragment();
 
+    @FragmentScoped
+    @ContributesAndroidInjector
+    abstract MyQuestFragment myQuestFragment();
+
     @ActivityScoped
     @Binds
     abstract MainContract.QuestPresenter mainQuestPresenter(QuestListPresenter presenter);

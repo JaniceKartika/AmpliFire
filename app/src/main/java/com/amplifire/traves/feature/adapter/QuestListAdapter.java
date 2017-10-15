@@ -58,10 +58,14 @@ public class QuestListAdapter extends RecyclerView.Adapter<QuestListAdapter.MyVi
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
         final LocationDao dao = locationDaos.get(position);
-        //todo
+//todo
         holder.ivThumbnail.setImageResource(0);
         holder.tvTitle.setText(dao.getName());
-        holder.tvTotalQuest.setText(context.getString(R.string.text_total) + " " + context.getString(R.string.text_quest) + " " + dao.getQuest().size());
+        if (dao.getQuest() != null) {
+            holder.tvTotalQuest.setText(context.getString(R.string.text_total) + " " + context.getString(R.string.text_quest) + " " + dao.getQuest().size());
+        } else {
+            holder.tvTotalQuest.setText(context.getString(R.string.text_total) + " 0");
+        }
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +83,5 @@ public class QuestListAdapter extends RecyclerView.Adapter<QuestListAdapter.MyVi
     public interface QuestSelect {
         void selectedPosition(String key);
     }
-
 
 }

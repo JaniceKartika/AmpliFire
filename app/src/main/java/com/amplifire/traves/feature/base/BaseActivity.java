@@ -1,11 +1,13 @@
 package com.amplifire.traves.feature.base;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.eventbus.GetUserEvent;
+import com.amplifire.traves.utils.CheckPermission;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.feature.signin.SignInActivity;
 import com.amplifire.traves.widget.AlertLoadingFragment;
@@ -47,6 +49,12 @@ public class BaseActivity extends DaggerAppCompatActivity {
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
+
+        int MyVersion = Build.VERSION.SDK_INT;
+        if (MyVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            CheckPermission checkPermission = new CheckPermission(this);
+            checkPermission.check();
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {

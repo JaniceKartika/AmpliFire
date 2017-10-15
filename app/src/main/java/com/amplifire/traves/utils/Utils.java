@@ -44,10 +44,9 @@ public class Utils {
         FirebaseRemoteConfig mRemoteConfig = App.mRemoteConfig;
         LatLng myLocation = PrefHelper.getLocation(context);
         int radius = Integer.parseInt(mRemoteConfig.getString(FirebaseUtils.RADIUS));
-        double distance = SphericalUtil.computeDistanceBetween(myLocation, latLng);
-        //11.866.529 = 11.000.000 = 11km
-        //radius(2) * 1.000 = 2 meter
-        if (distance > radius * 1000) {
+        int distance = (int) SphericalUtil.computeDistanceBetween(myLocation, latLng);
+        int rad = radius * 1000;
+        if (distance > rad) {
             return false;
         } else {
             return true;

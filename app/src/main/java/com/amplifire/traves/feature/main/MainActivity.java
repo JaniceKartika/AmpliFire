@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -31,7 +32,10 @@ import com.firebase.client.DataSnapshot;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -46,7 +50,7 @@ import butterknife.OnClick;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
-@RuntimePermissions
+//@RuntimePermissions
 public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerView,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -109,7 +113,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
 
         setDrawer();
         setFragment(0);
-
+        buildGoogleApiClient();
     }
 
     public static void startThisActivity(Context context) {
@@ -153,7 +157,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
             case 0: //point
                 fragment = QuestListFragment.newInstance();
                 break;
-            case 1: //quest
+            case 1: //myquest
+                fragment = MyQuestFragment.newInstance();
                 break;
             case 2: //rewards
                 break;
@@ -198,15 +203,25 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
         mAdapter.notifyDataSetChanged();
     }
 
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
     @Override
-    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     public void onConnected(@Nullable Bundle bundle) {
-        LocationServices.getFusedLocationProviderClient(this).getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                PrefHelper.saveLocation(MainActivity.this, location);
-            }
+        getLocation();
+    }
+
+    public void getLocation() {
+        LocationServices.getFusedLocationProviderClient(this).getLastLocation().addOnSuccessListener(location -> {
+            PrefHelper.saveLocation(MainActivity.this, location);
         });
+
     }
 
     @Override

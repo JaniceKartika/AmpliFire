@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -41,8 +42,10 @@ public class PrefHelper {
     }
 
     public static void saveLocation(Context context, Location location) {
-        saveToPref(context, LATITUDE, location.getLatitude() + "");
-        saveToPref(context, LONGITUDE, location.getLongitude() + "");
+        if (location != null) {
+            saveToPref(context, LATITUDE, location.getLatitude() + "");
+            saveToPref(context, LONGITUDE, location.getLongitude() + "");
+        }
     }
 
     public static LatLng getLocation(Context context) {
