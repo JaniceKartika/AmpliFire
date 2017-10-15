@@ -116,7 +116,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
         getUserLocation();
 
         // TODO hardcoded key value, should get from previous screen
-        getPlace("loc1");
+        getPlace("loc2");
     }
 
     @Override

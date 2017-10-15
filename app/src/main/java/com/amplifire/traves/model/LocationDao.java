@@ -8,6 +8,7 @@ import java.util.Map;
 public class LocationDao {
     public String key;
     public String address;
+    public String imageUrl;
     public double latitude;
     public double longitude;
     public String name;
@@ -24,6 +25,10 @@ public class LocationDao {
 
     public String getAddress() {
         return address;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public double getLatitude() {
@@ -45,7 +50,4 @@ public class LocationDao {
     public Map<String, Boolean> getQuest() {
         return quest;
     }
-
-
-
 }

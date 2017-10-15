@@ -4,15 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Map;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDao {
     public String key;
-    public String name;
-    public int point;
     public String current_location;
     public String current_quest;
     public String email;
+    public String name;
+    public int point;
     public Map<String, locationStatusDao> location;
     public Map<String, questStatusDao> quest;
 
@@ -22,22 +21,6 @@ public class UserDao {
 
     public void setKey(String key) {
         this.key = key;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getPoint() {
-        return point;
-    }
-
-    public void setPoint(int point) {
-        this.point = point;
     }
 
     public String getCurrent_location() {
@@ -64,12 +47,36 @@ public class UserDao {
         this.email = email;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
     public Map<String, locationStatusDao> getLocation() {
         return location;
     }
 
-    public void setLocations(Map<String, locationStatusDao> location) {
+    public void setLocation(Map<String, locationStatusDao> location) {
         this.location = location;
+    }
+
+    public Map<String, questStatusDao> getQuest() {
+        return quest;
+    }
+
+    public void setQuest(Map<String, questStatusDao> quest) {
+        this.quest = quest;
     }
 
     public class locationStatusDao {
@@ -128,7 +135,4 @@ public class UserDao {
             }
         }
     }
-
 }
-
-
