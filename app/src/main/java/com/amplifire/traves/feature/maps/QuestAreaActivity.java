@@ -1,8 +1,13 @@
 package com.amplifire.traves.feature.maps;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.amplifire.traves.R;
@@ -39,6 +45,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 
 public class QuestAreaActivity extends AppCompatActivity implements
         OnMapReadyCallback {
@@ -87,6 +95,15 @@ public class QuestAreaActivity extends AppCompatActivity implements
                 }
             }
         };
+
+        Button btDirection = (Button) findViewById(R.id.bt_directions_quest_area);
+        btDirection.setOnClickListener(v -> {
+            String uriString = "http://maps.google.com/maps?saddr=" +
+                    mLatLngs.get(0).latitude + "," + mLatLngs.get(0).longitude +
+                    "&daddr=" + mLatLngs.get(1).latitude + "," + mLatLngs.get(1).longitude;
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uriString));
+            startActivity(intent);
+        });
 
         setupToolbar();
         requestLocationPermission();
@@ -138,7 +155,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_quest_area);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getString(R.string.quest_area));
+            getSupportActionBar().setTitle(getString(R.string.quests_area));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -182,17 +199,40 @@ public class QuestAreaActivity extends AppCompatActivity implements
     }
 
     private void drawArea() {
+        LatLng position = new LatLng(mLocationDao.getLatitude(), mLocationDao.getLongitude());
+        mMap.addMarker(new MarkerOptions()
+                .position(position)
+                .icon(BitmapDescriptorFactory.fromBitmap(textAsBitmap(getString(R.string.quests_area),
+                        (float) 32.0, R.color.black)))
+        );
         mMap.addCircle(new CircleOptions()
-                .center(new LatLng(mLocationDao.getLatitude(), mLocationDao.getLongitude()))
+                .center(position)
                 .radius(mLocationDao.getRadius() * 1000)
                 .strokeColor(R.color.grey)
-                .strokeWidth(3.0f)
+                .strokeWidth(1.0f)
                 .fillColor(R.color.grey_transparant));
+    }
+
+    public Bitmap textAsBitmap(String text, float textSize, int textColor) {
+        Paint paint = new Paint(ANTI_ALIAS_FLAG);
+        paint.setTextSize(textSize);
+        paint.setColor(textColor);
+        paint.setFakeBoldText(true);
+        paint.setTextAlign(Paint.Align.LEFT);
+        float baseline = -paint.ascent();
+        int width = (int) (paint.measureText(text) + 0.5f);
+        int height = (int) (baseline + paint.descent() + 0.5f);
+        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(image);
+        canvas.drawText(text, 0, baseline, paint);
+        return image;
     }
 
     private void setupCamera(ArrayList<LatLng> latLngs) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        latLngs.forEach(builder::include);
+        for (LatLng latLng : latLngs) {
+            builder.include(latLng);
+        }
         LatLngBounds bounds = builder.build();
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 320));
     }

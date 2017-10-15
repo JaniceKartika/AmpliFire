@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/toolbar_quest_area"
+        android:id="@+id/toolbar_quest_started"
         layout="@layout/toolbar" />
 
     <RelativeLayout

@@ -182,7 +182,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
     public void onEvent(GetUserEvent event) {
         boolean isEmpty = true;
         if (event.dataSnapshot != null) {
-            DataSnapshot point = event.dataSnapshot.child(mFirebaseUtils.POINT);
+            DataSnapshot point = event.dataSnapshot.child(FirebaseUtils.POINT);
             if (point.exists()) {
                 isEmpty = false;
                 drawerDaos.get(0).setSubtitle(point.getValue() + " " + getString(R.string.text_point));

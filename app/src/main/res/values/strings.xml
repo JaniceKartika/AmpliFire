@@ -42,7 +42,7 @@
 
     <string name="text_confirmation_code">Kode Konfirmasi</string>
 
-    <string name="quest_area">Quest Area</string>
+    <string name="quests_area">Quests Area</string>
     <string name="directions">Directions</string>
     <string name="location_permission_not_granted">Need location permission</string>
     <string name="marker_position_title">You\'re here</string>
