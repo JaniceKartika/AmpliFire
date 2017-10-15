@@ -52,7 +52,7 @@
             android:id="@+id/drawer_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/items_drawer" />
+            tools:listitem="@layout/item_drawer" />
 
 
     </LinearLayout>

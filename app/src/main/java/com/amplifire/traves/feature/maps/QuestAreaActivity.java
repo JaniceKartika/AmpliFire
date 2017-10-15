@@ -14,8 +14,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.amplifire.traves.R;
-import com.amplifire.traves.feature.FirebaseUtils;
 import com.amplifire.traves.model.LocationDao;
+import com.amplifire.traves.utils.FirebaseUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;

@@ -17,8 +17,6 @@ import com.amplifire.traves.R;
 import com.amplifire.traves.feature.base.BaseActivity;
 import com.amplifire.traves.feature.main.MainActivity;
 import com.amplifire.traves.feature.signup.SignUpActivity;
-import com.amplifire.traves.widget.AlertLoadingFragment;
-import com.facebook.CallbackManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -164,7 +162,7 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
             // authenticate with your backend server, if you have one. Use
             // FirebaseUser.getToken() instead.
             String uid = user.getUid();
-//            MainActivity.startThisActivity(this);
+            MainActivity.startThisActivity(this);
         }
     }
 

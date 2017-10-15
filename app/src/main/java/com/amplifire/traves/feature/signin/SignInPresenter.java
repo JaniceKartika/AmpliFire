@@ -17,12 +17,10 @@
 package com.amplifire.traves.feature.signin;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.amplifire.traves.feature.FirebaseUtils;
-import com.amplifire.traves.widget.AlertLoadingFragment;
+import com.amplifire.traves.utils.FirebaseUtils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -38,7 +36,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -114,7 +111,7 @@ final class SignInPresenter implements SignInContract.Presenter {
     }
 
 
-    private void signInSuccess(Task<AuthResult> task){
+    private void signInSuccess(Task<AuthResult> task) {
         firebaseUtils.createUser(task);
         mSignInView.signInSuccess();
     }

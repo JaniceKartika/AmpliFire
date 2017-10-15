@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>geofencing_radius</key>
-            <value>100</value>
+        <key>radius</key>
+            <value>2</value>
     </entry>
 </defaultsMap>
