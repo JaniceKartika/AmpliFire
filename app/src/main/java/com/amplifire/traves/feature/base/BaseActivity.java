@@ -69,7 +69,7 @@ public class BaseActivity extends DaggerAppCompatActivity {
         mAuthListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user == null) {
-                if (layoutResID != R.layout.activity_signin || layoutResID != R.layout.activity_signup) {
+                if (layoutResID != R.layout.activity_signin && layoutResID != R.layout.activity_signup) {
                     SignInActivity.startThisActivity(this);
                 }
             } else {
