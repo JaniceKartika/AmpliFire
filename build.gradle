@@ -45,7 +45,7 @@ ext {
     EventBusVersion = '3.0.0'
     permissionsdispatcherVersion = '2.0.7'
     gsonVersion = '2.0.0'
-    glideVersion = '3.7.0'
+    glideVersion = '3.8.0'
 }
 
 
