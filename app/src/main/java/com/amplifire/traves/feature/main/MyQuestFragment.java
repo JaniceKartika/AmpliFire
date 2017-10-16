@@ -33,7 +33,7 @@ import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 
 @ActivityScoped
-public class MyQuestFragment extends DaggerFragment implements MainContract.MyQuestView, QuestAdapter.QuestSelect {
+public class MyQuestFragment extends DaggerFragment implements MainContract.MyQuestView, QuestAdapter.ItemClickListener {
 
     @Inject
     MainContract.MyQuestPresenter mPresenter;
@@ -90,7 +90,7 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.MyQu
     }
 
     @Override
-    public void selectedPosition(String key) {
+    public void onItemClickListener(String key) {
         //todo
     }
 

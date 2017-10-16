@@ -50,7 +50,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="@dimen/dimens_8dp"
-                    android:text="{fa-star-o}"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_16sp" />
 

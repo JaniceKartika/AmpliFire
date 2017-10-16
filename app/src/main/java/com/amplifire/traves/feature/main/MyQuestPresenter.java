@@ -59,6 +59,7 @@ final class MyQuestPresenter implements MainContract.MyQuestPresenter, FirebaseU
 
     @Override
     public void getLocation() {
+        Log.wtf("test_",userDao+"");
         String key = firebaseUtils.USER + userDao.getKey();
         ref = (Firebase) firebaseUtils.getData(key + "/" + firebaseUtils.QUEST, null, null);
         valueEventListener = firebaseUtils.valueEventListener(this);
@@ -68,10 +69,9 @@ final class MyQuestPresenter implements MainContract.MyQuestPresenter, FirebaseU
 
     @Override
     public void takeView(Context context, MainContract.MyQuestView view) {
-
         mMyQuestView = view;
         userDao = PrefHelper.getUser(context);
-        String key = firebaseUtils.USER + userDao.getKey();
+        Log.wtf("test_",userDao+"");
         getLocation();
     }
 
