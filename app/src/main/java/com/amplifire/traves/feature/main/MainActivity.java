@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.eventbus.GetUserEvent;
+import com.amplifire.traves.feature.adapter.DrawerAdapter;
 import com.amplifire.traves.feature.base.BaseActivity;
 import com.amplifire.traves.model.DrawerDao;
 import com.amplifire.traves.utils.FirebaseUtils;
@@ -53,8 +54,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
     CircleImageView imageAvatar;
     @BindView(R.id.text_name)
     TextView textName;
-    @BindView(R.id.text_description)
-    TextView textDescription;
+    @BindView(R.id.text_point)
+    TextView textPoint;
     @BindView(R.id.drawer_recycler)
     RecyclerView drawerRecycler;
     private List<DrawerDao> drawerDaos = new ArrayList<>();
@@ -125,11 +126,11 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
         drawerRecycler.setLayoutManager(mLayoutManager);
         drawerRecycler.setItemAnimator(new DefaultItemAnimator());
 
-        drawerDaos.add(new DrawerDao(getString(R.string.text_my) + " " + getString(R.string.text_point), "", false));
-        drawerDaos.add(new DrawerDao(getString(R.string.text_my) + " " + getString(R.string.text_quest), null, false));
-        drawerDaos.add(new DrawerDao(getString(R.string.text_reward), null, false));
-        drawerDaos.add(new DrawerDao(getString(R.string.text_settings), null, true));
-        drawerDaos.add(new DrawerDao(getString(R.string.text_help), null, false));
+        drawerDaos.add(new DrawerDao(getString(R.string.text_home), true, false));
+        drawerDaos.add(new DrawerDao(getString(R.string.text_my) + " " + getString(R.string.text_quest), false, false));
+        drawerDaos.add(new DrawerDao(getString(R.string.text_scoreboard), false, false));
+        drawerDaos.add(new DrawerDao(getString(R.string.text_settings), false, true));
+        drawerDaos.add(new DrawerDao(getString(R.string.text_help), false, false));
 
         mAdapter = new DrawerAdapter(this, drawerDaos);
         drawerRecycler.setAdapter(mAdapter);
@@ -138,6 +139,14 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
 
     @Override
     public void drawerSelect(int position) {
+        for (int i = 0; i < drawerDaos.size(); i++) {
+            if (i == position) {
+                drawerDaos.get(i).setSelected(true);
+            } else {
+                drawerDaos.get(i).setSelected(false);
+            }
+        }
+        mAdapter.notifyDataSetChanged();
         setFragment(position);
     }
 
@@ -181,15 +190,20 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
     @Subscribe
     public void onEvent(GetUserEvent event) {
         boolean isEmpty = true;
+        try {
+            textName.setText(mAuth.getCurrentUser().getEmail() + "");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         if (event.dataSnapshot != null) {
             DataSnapshot point = event.dataSnapshot.child(mFirebaseUtils.POINT);
             if (point.exists()) {
                 isEmpty = false;
-                drawerDaos.get(0).setSubtitle(point.getValue() + " " + getString(R.string.text_point));
+                textPoint.setText(point.getValue() + " " + getString(R.string.text_point));
             }
         }
         if (isEmpty) {
-            drawerDaos.get(0).setSubtitle("0 " + getString(R.string.text_point));
+            textPoint.setText("0 " + getString(R.string.text_point));
         }
         mAdapter.notifyDataSetChanged();
     }

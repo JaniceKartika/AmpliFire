@@ -1,5 +1,7 @@
-package com.amplifire.traves.feature.main;
+package com.amplifire.traves.feature.adapter;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,7 +24,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.MyViewHold
 
     private List<DrawerDao> blocks = new ArrayList<>();
     private DrawerView drawerView;
-
+    private Context context;
 
     public DrawerAdapter(DrawerView drawerView, List<DrawerDao> blocks) {
         this.blocks = blocks;
@@ -32,8 +34,6 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.MyViewHold
     static class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.text_title)
         TextView textTitle;
-        @BindView(R.id.text_point)
-        TextView textPoint;
         @BindView(R.id.relative)
         RelativeLayout relative;
         @BindView(R.id.divider)
@@ -49,7 +49,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.MyViewHold
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_drawer, parent, false);
-
+        context = parent.getContext();
         return new MyViewHolder(itemView);
     }
 
@@ -59,15 +59,16 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.MyViewHold
         final DrawerDao dao = blocks.get(position);
         holder.textTitle.setText(dao.getTitle());
 
-        holder.textPoint.setVisibility(View.GONE);
-        if (!TextUtils.isEmpty(dao.getSubtitle())) {
-            holder.textPoint.setText(dao.getSubtitle());
-            holder.textPoint.setVisibility(View.VISIBLE);
-        }
 
         holder.divider.setVisibility(View.GONE);
         if (dao.isDivider()) {
             holder.divider.setVisibility(View.VISIBLE);
+        }
+
+        if (dao.isSelected()) {
+            holder.relative.setBackgroundColor(ContextCompat.getColor(context, R.color.grey_light));
+        } else {
+            holder.relative.setBackgroundColor(0);
         }
 
         holder.relative.setOnClickListener(v -> {

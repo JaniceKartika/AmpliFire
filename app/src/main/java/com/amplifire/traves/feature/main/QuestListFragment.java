@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
@@ -47,6 +48,8 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
 
     @BindView(R.id.quest_recycler)
     RecyclerView questRecycler;
+    @BindView(R.id.tvempty)
+    TextView tvempty;
     private List<LocationDao> locationDaos = new ArrayList<>();
     private LocationAdapter mAdapter;
 
@@ -81,7 +84,7 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
         questRecycler.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new LocationAdapter(this, locationDaos);
         questRecycler.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+        notifyAdapter();
     }
 
     @Override
@@ -100,7 +103,7 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
     public void addData(LocationDao locationDao) {
         if (Utils.isOnRange(getContext(), new LatLng(locationDao.getLatitude(), locationDao.getLongitude()))) {
             locationDaos.add(locationDao);
-            mAdapter.notifyDataSetChanged();
+            notifyAdapter();
         }
     }
 
@@ -143,12 +146,22 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
                                        //update
                                        locationDaos.add(locationDao);
                                    }
-                                   mAdapter.notifyDataSetChanged();
+                                   notifyAdapter();
                                }
                            }
                 );
 
 
+    }
+
+    private void notifyAdapter() {
+        tvempty.setText(getString(R.string.text_no_quest_near));
+        if (locationDaos.size() == 0) {
+            tvempty.setVisibility(View.VISIBLE);
+        } else {
+            tvempty.setVisibility(View.GONE);
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

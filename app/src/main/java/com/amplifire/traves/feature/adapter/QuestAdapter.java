@@ -67,9 +67,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.MyViewHolder
         holder.tvDescription.setText(dao.getDesc());
         Utils.setImage(context, dao.getImageUrl(), holder.ivThumbnail);
         if (dao.getStatus() == 2) {
-            holder.tvComplete.setText("{fa-star}");
-        } else {
-            holder.tvComplete.setText("{fa-star-o}");
+            holder.tvComplete.setText("{fa-check-circle}");
         }
         holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override

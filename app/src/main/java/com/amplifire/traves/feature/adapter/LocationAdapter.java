@@ -50,7 +50,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.MyView
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_main_quest, parent, false);
+                .inflate(R.layout.item_location, parent, false);
         context = parent.getContext();
         return new MyViewHolder(itemView);
     }
@@ -64,9 +64,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.MyView
 
         holder.tvTitle.setText(dao.getName());
         if (dao.getQuest() != null) {
-            holder.tvTotalQuest.setText(context.getString(R.string.text_total) + " " + context.getString(R.string.text_quest) + " " + dao.getQuest().size());
+            holder.tvTotalQuest.setText(dao.getQuest().size() + "\n" + context.getString(R.string.text_quest));
         } else {
-            holder.tvTotalQuest.setText(context.getString(R.string.text_total) + " 0");
+            holder.tvTotalQuest.setText("0\n" + context.getString(R.string.text_quest));
         }
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

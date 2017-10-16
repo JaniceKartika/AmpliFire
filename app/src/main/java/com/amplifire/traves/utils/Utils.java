@@ -24,6 +24,8 @@ import com.google.maps.android.SphericalUtil;
 
 public class Utils {
 
+    public static String DATA = "DATA";
+
     public static void signOut(GoogleApiClient mGoogleApiClient) {
         //todo alert if wanna logout
 
@@ -64,7 +66,6 @@ public class Utils {
         if (!TextUtils.isEmpty(url)) {
             Glide.with(context)
                     .load(url)
-                    .placeholder(R.drawable.ic_default_image).error(R.drawable.ic_default_image)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {

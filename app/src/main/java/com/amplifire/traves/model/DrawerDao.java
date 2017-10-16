@@ -2,12 +2,12 @@ package com.amplifire.traves.model;
 
 public class DrawerDao {
     public String title;
-    public String subtitle;
+    public boolean selected;
     public boolean divider;
 
-    public DrawerDao(String title, String subtitle, boolean divider) {
+    public DrawerDao(String title, boolean selected, boolean divider) {
         this.title = title;
-        this.subtitle = subtitle;
+        this.selected = selected;
         this.divider = divider;
     }
 
@@ -15,15 +15,23 @@ public class DrawerDao {
         return title;
     }
 
-    public String getSubtitle() {
-        return subtitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public boolean isDivider() {
         return divider;
+    }
+
+    public void setDivider(boolean divider) {
+        this.divider = divider;
     }
 }

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
@@ -42,6 +43,8 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.MyQu
 
     @BindView(R.id.quest_recycler)
     RecyclerView questRecycler;
+    @BindView(R.id.tvempty)
+    TextView tvempty;
     private List<QuestDao> questDaos = new ArrayList<>();
     private QuestAdapter mAdapter;
 
@@ -78,7 +81,7 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.MyQu
         questRecycler.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new QuestAdapter(this, questDaos);
         questRecycler.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+        notifyAdapter();
     }
 
     @Override
@@ -95,7 +98,7 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.MyQu
     @Override
     public void addData(QuestDao questDao) {
         questDaos.add(questDao);
-        mAdapter.notifyDataSetChanged();
+        notifyAdapter();
     }
 
     @Override
@@ -137,13 +140,23 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.MyQu
                                        //update
                                        questDaos.add(dao);
                                    }
-                                   mAdapter.notifyDataSetChanged();
+                                   notifyAdapter();
                                }
                            }
                 );
 
 
     }
+
+    private void notifyAdapter() {
+        if (questDaos.size() == 0) {
+            tvempty.setVisibility(View.VISIBLE);
+        } else {
+            tvempty.setVisibility(View.GONE);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onDestroyView() {
