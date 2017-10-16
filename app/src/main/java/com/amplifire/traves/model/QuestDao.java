@@ -7,6 +7,7 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QuestDao {
     public int activeUser;
+    public String key;
     public String desc;
     public String imageUrl;
     public double latitude;
@@ -16,7 +17,16 @@ public class QuestDao {
     public PictureDao picture;
     public MarketDao market;
     public QuizDao quiz;
+    public int status;
     public Map<String, TreasureDao> treasure;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public int getActiveUser() {
         return activeUser;
@@ -72,5 +82,9 @@ public class QuestDao {
 
     public Map<String, TreasureDao> getTreasure() {
         return treasure;
+    }
+
+    public int getStatus() {
+        return status;
     }
 }

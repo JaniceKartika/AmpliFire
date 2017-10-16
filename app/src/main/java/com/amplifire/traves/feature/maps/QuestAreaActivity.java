@@ -119,6 +119,8 @@ public class QuestAreaActivity extends AppCompatActivity implements
         getPlace("loc2");
     }
 
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {

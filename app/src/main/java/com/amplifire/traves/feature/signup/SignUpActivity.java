@@ -120,10 +120,15 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mSignUpPresenter.takeView(this);
+    public void onStart() {
+        super.onStart();
+        mSignUpPresenter.takeView(this, this);
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mSignUpPresenter.dropView();
+    }
 
 }

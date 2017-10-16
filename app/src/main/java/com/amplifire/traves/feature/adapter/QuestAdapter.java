@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amplifire.traves.R;
-import com.amplifire.traves.model.LocationDao;
+import com.amplifire.traves.model.QuestDao;
+import com.amplifire.traves.utils.Utils;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,26 +21,28 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class QuestListAdapter extends RecyclerView.Adapter<QuestListAdapter.MyViewHolder> {
+public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.MyViewHolder> {
 
     private QuestSelect questSelect;
-    private List<LocationDao> locationDaos = new ArrayList<>();
+    private List<QuestDao> QuestDaos = new ArrayList<>();
     private Context context;
 
-    public QuestListAdapter(QuestSelect questSelect, List<LocationDao> blocks) {
+    public QuestAdapter(QuestSelect questSelect, List<QuestDao> blocks) {
         this.questSelect = questSelect;
-        this.locationDaos = blocks;
+        this.QuestDaos = blocks;
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.cardView)
-        CardView cardView;
         @BindView(R.id.ivThumbnail)
         ImageView ivThumbnail;
-        @BindView(R.id.tv_title)
-        TextView tvTitle;
-        @BindView(R.id.tv_total_quest)
-        TextView tvTotalQuest;
+        @BindView(R.id.tv_title_quest)
+        TextView tvTitleQuest;
+        @BindView(R.id.tv_description)
+        TextView tvDescription;
+        @BindView(R.id.tv_complete)
+        IconTextView tvComplete;
+        @BindView(R.id.cardview)
+        CardView cardview;
 
         public MyViewHolder(View view) {
             super(view);
@@ -49,7 +53,7 @@ public class QuestListAdapter extends RecyclerView.Adapter<QuestListAdapter.MyVi
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_main_quest, parent, false);
+                .inflate(R.layout.item_quest, parent, false);
         context = parent.getContext();
         return new MyViewHolder(itemView);
     }
@@ -57,16 +61,15 @@ public class QuestListAdapter extends RecyclerView.Adapter<QuestListAdapter.MyVi
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
-        final LocationDao dao = locationDaos.get(position);
-//todo
-        holder.ivThumbnail.setImageResource(0);
-        holder.tvTitle.setText(dao.getName());
-        if (dao.getQuest() != null) {
-            holder.tvTotalQuest.setText(context.getString(R.string.text_total) + " " + context.getString(R.string.text_quest) + " " + dao.getQuest().size());
-        } else {
-            holder.tvTotalQuest.setText(context.getString(R.string.text_total) + " 0");
+        final QuestDao dao = QuestDaos.get(position);
+
+        holder.tvTitleQuest.setText(dao.getTitle());
+        holder.tvDescription.setText(dao.getDesc());
+        Utils.setImage(context, dao.getImageUrl(), holder.ivThumbnail);
+        if (dao.getStatus() == 2) {
+            holder.tvComplete.setText("{fa-check-circle}");
         }
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 questSelect.selectedPosition(dao.getKey());
@@ -77,11 +80,10 @@ public class QuestListAdapter extends RecyclerView.Adapter<QuestListAdapter.MyVi
 
     @Override
     public int getItemCount() {
-        return locationDaos.size();
+        return QuestDaos.size();
     }
 
     public interface QuestSelect {
         void selectedPosition(String key);
     }
-
 }

@@ -54,8 +54,12 @@ public class PrefHelper {
         }
     }
 
-    public static void saveUser(Context context, String string) {
-        saveToPref(context, USER, string);
+    public static void saveUser(Context context, DataSnapshot userData) {
+        UserDao userDao = userData.getValue(UserDao.class);
+        userDao.setKey(userData.getKey());
+        Gson gson = new Gson();
+        String user = gson.toJson(userDao);
+        saveToPref(context, USER, user);
     }
 
     public static UserDao getUser(Context context) {

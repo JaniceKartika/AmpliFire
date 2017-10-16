@@ -3,6 +3,7 @@ package com.amplifire.traves.feature.base;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.amplifire.traves.R;
@@ -87,7 +88,6 @@ public class BaseActivity extends DaggerAppCompatActivity {
                 }
             } else {
                 mFirebaseUtils.getUser(user.getEmail());
-
             }
         };
         mAuth.addAuthStateListener(mAuthListener);
@@ -135,10 +135,7 @@ public class BaseActivity extends DaggerAppCompatActivity {
     @Subscribe
     public void onEvent(GetUserEvent event) {
         userData = event.dataSnapshot;
-        UserDao userDao = userData.getValue(UserDao.class);
-        userDao.setKey(userData.getKey());
-        String user = gson.toJson(userDao);
-        PrefHelper.saveUser(this, user);
+        PrefHelper.saveUser(this, userData);
     }
 
 }

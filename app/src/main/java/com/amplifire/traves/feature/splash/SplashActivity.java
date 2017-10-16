@@ -57,16 +57,16 @@ public class SplashActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
-            Handler handler = new Handler();
-            Runnable runnable = () -> {
-                if (user != null) {
-                    MainActivity.startThisActivity(SplashActivity.this);
-                } else {
-                    SignInActivity.startThisActivity(SplashActivity.this);
-                }
-            };
-            handler.postDelayed(runnable, 3000);
+//            Handler handler = new Handler();
+//            Runnable runnable = () -> {
+            if (user != null) {
+                MainActivity.startThisActivity(SplashActivity.this);
+            } else {
+                SignInActivity.startThisActivity(SplashActivity.this);
+            }
         };
+//            handler.postDelayed(runnable, 3000);
+//        };
         mAuth.addAuthStateListener(mAuthListener);
     }
 

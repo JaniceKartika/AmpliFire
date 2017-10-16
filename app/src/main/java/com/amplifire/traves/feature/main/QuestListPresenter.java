@@ -16,6 +16,7 @@
 
 package com.amplifire.traves.feature.main;
 
+import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.amplifire.traves.App;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -36,6 +38,8 @@ final class QuestListPresenter implements MainContract.QuestPresenter, FirebaseU
 
     private Handler handler = new Handler();
     private Runnable runnable;
+    private Firebase ref;
+    private ChildEventListener childEventListener;
 
     @Nullable
     private MainContract.QuestView mQuestView;
@@ -51,16 +55,22 @@ final class QuestListPresenter implements MainContract.QuestPresenter, FirebaseU
     @Override
     public void getLocation() {
         mQuestView.showAlert(true);
-        Firebase ref = (Firebase) firebaseUtils.getData(firebaseUtils.LOCATION, null, null);
-        ref.addChildEventListener(firebaseUtils.childListener(this));
+        ref = (Firebase) firebaseUtils.getData(firebaseUtils.LOCATION, null, null);
+        childEventListener = firebaseUtils.childListener(this);
+        ref.addChildEventListener(childEventListener);
     }
 
     @Override
-    public void takeView(MainContract.QuestView view) {
+    public void takeView(Context context, MainContract.QuestView view) {
         mQuestView = view;
         getLocation();
     }
 
+    @Override
+    public void dropView() {
+        firebaseUtils.removeListener(ref, childEventListener);
+        mQuestView = null;
+    }
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {

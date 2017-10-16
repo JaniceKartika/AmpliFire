@@ -1,23 +1,20 @@
 package com.amplifire.traves.feature.main;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
-import com.amplifire.traves.feature.adapter.QuestListAdapter;
+import com.amplifire.traves.feature.adapter.LocationAdapter;
 import com.amplifire.traves.model.LocationDao;
-import com.amplifire.traves.model.UserDao;
 import com.amplifire.traves.utils.FirebaseUtils;
-import com.amplifire.traves.utils.PrefHelper;
 import com.amplifire.traves.utils.Utils;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -41,7 +38,7 @@ import static rx.android.schedulers.AndroidSchedulers.mainThread;
  */
 
 @ActivityScoped
-public class QuestListFragment extends DaggerFragment implements MainContract.QuestView, QuestListAdapter.QuestSelect {
+public class QuestListFragment extends DaggerFragment implements MainContract.QuestView, LocationAdapter.QuestSelect {
 
     @Inject
     MainContract.QuestPresenter mPresenter;
@@ -51,11 +48,12 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
 
     @BindView(R.id.quest_recycler)
     RecyclerView questRecycler;
+    @BindView(R.id.tvempty)
+    TextView tvempty;
     private List<LocationDao> locationDaos = new ArrayList<>();
-    private QuestListAdapter mAdapter;
+    private LocationAdapter mAdapter;
 
     Unbinder unbinder;
-    private UserDao userDao;
 
     @Inject
     public QuestListFragment() {
@@ -75,24 +73,18 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, root);
-        userDao = getUserData();
         init();
-        mPresenter.takeView(this);
+        mPresenter.takeView(getContext(), this);
         return root;
-    }
-
-    @Override
-    public UserDao getUserData() {
-        return  PrefHelper.getUser(getContext());
     }
 
     private void init() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         questRecycler.setLayoutManager(mLayoutManager);
         questRecycler.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new QuestListAdapter(this, locationDaos);
+        mAdapter = new LocationAdapter(this, locationDaos);
         questRecycler.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+        notifyAdapter();
     }
 
     @Override
@@ -100,11 +92,6 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
         ((MainActivity) getActivity()).showAlert(isShow);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 
     @Override
     public void selectedPosition(String key) {
@@ -116,7 +103,7 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
     public void addData(LocationDao locationDao) {
         if (Utils.isOnRange(getContext(), new LatLng(locationDao.getLatitude(), locationDao.getLongitude()))) {
             locationDaos.add(locationDao);
-            mAdapter.notifyDataSetChanged();
+            notifyAdapter();
         }
     }
 
@@ -159,7 +146,7 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
                                        //update
                                        locationDaos.add(locationDao);
                                    }
-                                   mAdapter.notifyDataSetChanged();
+                                   notifyAdapter();
                                }
                            }
                 );
@@ -167,5 +154,21 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
 
     }
 
+    private void notifyAdapter() {
+        tvempty.setText(getString(R.string.text_no_quest_near));
+        if (locationDaos.size() == 0) {
+            tvempty.setVisibility(View.VISIBLE);
+        } else {
+            tvempty.setVisibility(View.GONE);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPresenter.dropView();
+        unbinder.unbind();
+    }
 
 }

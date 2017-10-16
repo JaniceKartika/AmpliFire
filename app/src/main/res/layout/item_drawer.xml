@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
+
     android:foreground="?android:attr/selectableItemBackground">
 
 
@@ -25,17 +26,6 @@
         android:layout_margin="16dp"
         android:textColor="@color/black"
         tools:text="My Point" />
-
-    <TextView
-        android:id="@+id/text_point"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="16dp"
-        android:textColor="@color/colorPrimary"
-        android:visibility="gone"
-        tools:text="255 points" />
 
 
 </RelativeLayout>

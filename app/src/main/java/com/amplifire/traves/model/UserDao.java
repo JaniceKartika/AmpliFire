@@ -12,8 +12,8 @@ public class UserDao {
     public String email;
     public String name;
     public int point;
-    public Map<String, locationStatusDao> location;
-    public Map<String, questStatusDao> quest;
+//    public Map<String, locationStatusDao> location;
+//    public Map<String, questStatusDao> quest;
 
     public String getKey() {
         return key;
@@ -63,21 +63,21 @@ public class UserDao {
         this.point = point;
     }
 
-    public Map<String, locationStatusDao> getLocation() {
-        return location;
-    }
-
-    public void setLocation(Map<String, locationStatusDao> location) {
-        this.location = location;
-    }
-
-    public Map<String, questStatusDao> getQuest() {
-        return quest;
-    }
-
-    public void setQuest(Map<String, questStatusDao> quest) {
-        this.quest = quest;
-    }
+//    public Map<String, locationStatusDao> getLocation() {
+//        return location;
+//    }
+//
+//    public void setLocation(Map<String, locationStatusDao> location) {
+//        this.location = location;
+//    }
+//
+//    public Map<String, questStatusDao> getQuest() {
+//        return quest;
+//    }
+//
+//    public void setQuest(Map<String, questStatusDao> quest) {
+//        this.quest = quest;
+//    }
 
     public class locationStatusDao {
         public Map<String, StatusDao> status;

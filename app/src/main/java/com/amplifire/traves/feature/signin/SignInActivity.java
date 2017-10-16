@@ -183,8 +183,14 @@ public class SignInActivity extends BaseActivity implements SignInContract.View,
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mSignInPresenter.takeView(this);
+    public void onStart() {
+        super.onStart();
+        mSignInPresenter.takeView(this, this);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mSignInPresenter.dropView();
     }
 }

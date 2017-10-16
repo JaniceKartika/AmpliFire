@@ -196,6 +196,7 @@ public class FirebaseUtils {
     public Query getData(String path, String orderByChild, String equalTo) {
 
 //example : new Firebase(BASE_API + "location").orderByChild(orderByChild).equalTo(equalTo);
+
         Query query = new Firebase(BASE_API + path);
         if (!TextUtils.isEmpty(orderByChild)) {
             query.orderByChild(orderByChild);
@@ -289,7 +290,23 @@ public class FirebaseUtils {
     }
 
     public void removeListener(Firebase ref, ChildEventListener childEventListener) {
-        ref.removeEventListener(childEventListener);
+        try {
+            if(childEventListener!=null) {
+                ref.removeEventListener(childEventListener);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeListener(Firebase ref, ValueEventListener valueEventListener) {
+        try {
+            if(valueEventListener!=null) {
+                ref.removeEventListener(valueEventListener);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     public interface ChildSnapshootListener {
