@@ -25,9 +25,11 @@
         </FrameLayout>
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_quest_started"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
+            android:clipToPadding="false"
             android:paddingBottom="@dimen/dimens_8dp"
             android:paddingTop="@dimen/dimens_8dp"
             android:scrollbars="vertical" />

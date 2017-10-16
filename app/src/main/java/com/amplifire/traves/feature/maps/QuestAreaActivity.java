@@ -71,7 +71,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
     private DatabaseReference mDatabase;
     private LocationDao mLocationDao;
 
-    private int locationUpdatecount = 0;
+    private int locationUpdateCount = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,8 +85,8 @@ public class QuestAreaActivity extends AppCompatActivity implements
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                locationUpdatecount++;
-                if (locationUpdatecount < MAX_UPDATE_LOCATION) {
+                locationUpdateCount++;
+                if (locationUpdateCount < MAX_UPDATE_LOCATION) {
                     for (Location location : locationResult.getLocations()) {
                         updateMarker(location);
                     }
