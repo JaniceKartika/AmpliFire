@@ -117,6 +117,7 @@ dependencies {
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$rootProject.permissionsdispatcherVersion"
 
     compile "com.squareup.retrofit2:converter-gson:$rootProject.gsonVersion"
+    compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"
 }
 
 

@@ -62,23 +62,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="{fa-star-o}"
+                    tools:text="{fa-star-o}"
                     android:textColor="@color/colorPrimary"
                     android:textSize="32sp" />
                 <!--fa-star-->
 
-                <TextView
-                    android:id="@+id/tv_point"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/tv_description"
-                    android:layout_marginLeft="@dimen/dimens_8dp"
-                    android:layout_marginRight="@dimen/dimens_16dp"
-                    android:layout_marginTop="@dimen/dimens_8dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/dimens_16dp"
-                    tools:text="200 point" />
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_point"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_below="@+id/tv_description"-->
+                    <!--android:layout_marginLeft="@dimen/dimens_8dp"-->
+                    <!--android:layout_marginRight="@dimen/dimens_16dp"-->
+                    <!--android:layout_marginTop="@dimen/dimens_8dp"-->
+                    <!--android:textColor="@color/black"-->
+                    <!--android:textSize="@dimen/dimens_16dp"-->
+                    <!--tools:text="200 point" />-->
 
 
             </RelativeLayout>

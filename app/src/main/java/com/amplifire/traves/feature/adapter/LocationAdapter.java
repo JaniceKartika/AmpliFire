@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.model.LocationDao;
+import com.amplifire.traves.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +20,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class QuestListAdapter extends RecyclerView.Adapter<QuestListAdapter.MyViewHolder> {
+public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.MyViewHolder> {
 
     private QuestSelect questSelect;
     private List<LocationDao> locationDaos = new ArrayList<>();
     private Context context;
 
-    public QuestListAdapter(QuestSelect questSelect, List<LocationDao> blocks) {
+    public LocationAdapter(QuestSelect questSelect, List<LocationDao> blocks) {
         this.questSelect = questSelect;
         this.locationDaos = blocks;
     }
@@ -58,8 +59,9 @@ public class QuestListAdapter extends RecyclerView.Adapter<QuestListAdapter.MyVi
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
         final LocationDao dao = locationDaos.get(position);
-//todo
-        holder.ivThumbnail.setImageResource(0);
+
+        Utils.setImage(context, dao.getImageUrl(), holder.ivThumbnail);
+
         holder.tvTitle.setText(dao.getName());
         if (dao.getQuest() != null) {
             holder.tvTotalQuest.setText(context.getString(R.string.text_total) + " " + context.getString(R.string.text_quest) + " " + dao.getQuest().size());

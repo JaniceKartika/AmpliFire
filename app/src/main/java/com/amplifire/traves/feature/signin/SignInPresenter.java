@@ -17,8 +17,10 @@
 package com.amplifire.traves.feature.signin;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.facebook.AccessToken;
@@ -136,8 +138,13 @@ final class SignInPresenter implements SignInContract.Presenter {
 
 
     @Override
-    public void takeView(SignInContract.View view) {
+    public void takeView(Context context, SignInContract.View view) {
         mSignInView = view;
+    }
+
+    @Override
+    public void dropView() {
+//        mSignInView = null;
     }
 
 }

@@ -17,6 +17,7 @@
 package com.amplifire.traves.feature.signup;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -54,9 +55,13 @@ final class SignUpPresenter implements SignUpContract.Presenter {
     }
 
     @Override
-    public void takeView(SignUpContract.View view) {
+    public void takeView(Context context, SignUpContract.View view) {
         mSignUpView = view;
     }
 
+    @Override
+    public void dropView() {
+        mSignUpView = null;
+    }
 
 }

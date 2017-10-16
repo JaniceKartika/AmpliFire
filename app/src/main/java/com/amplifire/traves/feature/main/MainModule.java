@@ -23,4 +23,8 @@ public abstract class MainModule {
     @Binds
     abstract MainContract.QuestPresenter mainQuestPresenter(QuestListPresenter presenter);
 
+    @ActivityScoped
+    @Binds
+    abstract MainContract.MyQuestPresenter mainMyQuestPresenter(MyQuestPresenter presenter);
+
 }

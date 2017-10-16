@@ -2,8 +2,16 @@ package com.amplifire.traves.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.amplifire.traves.App;
+import com.amplifire.traves.R;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,6 +57,27 @@ public class Utils {
             return false;
         } else {
             return true;
+        }
+    }
+
+    public static void setImage(Context context, String url, ImageView imageview) {
+        if (!TextUtils.isEmpty(url)) {
+            Glide.with(context)
+                    .load(url)
+                    .placeholder(R.drawable.ic_default_image).error(R.drawable.ic_default_image)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imageview);
         }
     }
 }

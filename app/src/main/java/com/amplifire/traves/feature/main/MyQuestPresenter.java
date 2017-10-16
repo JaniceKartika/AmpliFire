@@ -16,19 +16,19 @@
 
 package com.amplifire.traves.feature.main;
 
-import android.os.Handler;
+import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
-import com.amplifire.traves.model.LocationDao;
+import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.model.UserDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.PrefHelper;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-
-import java.util.HashMap;
-import java.util.List;
+import com.firebase.client.ValueEventListener;
 
 import javax.inject.Inject;
 
@@ -38,13 +38,15 @@ import rx.schedulers.Schedulers;
 
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
-final class MyQuestPresenter implements MainContract.QuestPresenter, FirebaseUtils.ValueSnapshootListener {
+final class MyQuestPresenter implements MainContract.MyQuestPresenter, FirebaseUtils.ValueSnapshootListener {
 
-    private Handler handler = new Handler();
-    private Runnable runnable;
+    private UserDao userDao;
+    private Firebase ref;
+    private ValueEventListener valueEventListener;
+
 
     @Nullable
-    private MainContract.QuestView mQuestView;
+    private MainContract.MyQuestView mMyQuestView;
 
     @Inject
     public MyQuestPresenter() {
@@ -53,29 +55,39 @@ final class MyQuestPresenter implements MainContract.QuestPresenter, FirebaseUti
 
     @Inject
     public FirebaseUtils firebaseUtils;
+//PrefHelper.getUser(getContext())
 
     @Override
     public void getLocation() {
-        UserDao userDao = mQuestView.getUserData();
         String key = firebaseUtils.USER + userDao.getKey();
-        Firebase ref = (Firebase) firebaseUtils.getData(key, null, firebaseUtils.QUEST);
-        ref.addValueEventListener(firebaseUtils.valueEventListener(this));
+        ref = (Firebase) firebaseUtils.getData(key + "/" + firebaseUtils.QUEST, null, null);
+        valueEventListener = firebaseUtils.valueEventListener(this);
+        ref.addValueEventListener(valueEventListener);
     }
 
 
     @Override
-    public void takeView(MainContract.QuestView view) {
-        mQuestView = view;
+    public void takeView(Context context, MainContract.MyQuestView view) {
+
+        mMyQuestView = view;
+        userDao = PrefHelper.getUser(context);
+        String key = firebaseUtils.USER + userDao.getKey();
         getLocation();
+    }
+
+    @Override
+    public void dropView() {
+        firebaseUtils.removeListener(ref, valueEventListener);
+        mMyQuestView = null;
     }
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         Observable.from(dataSnapshot.getChildren())
                 .subscribeOn(Schedulers.newThread())
-                .toList()
+                .map(data -> (Firebase) firebaseUtils.getData(firebaseUtils.QUEST + data.getKey(), null, null))
                 .observeOn(mainThread())
-                .subscribe(new Observer<List<DataSnapshot>>() {
+                .subscribe(new Observer<Firebase>() {
                                @Override
                                public void onCompleted() {
 
@@ -87,13 +99,29 @@ final class MyQuestPresenter implements MainContract.QuestPresenter, FirebaseUti
                                }
 
                                @Override
-                               public void onNext(List<DataSnapshot> dataSnapshots) {
-                                   //todo call other
+                               public void onNext(Firebase firebase) {
+                                   firebase.addValueEventListener(new ValueEventListener() {
+                                       @Override
+                                       public void onDataChange(DataSnapshot dataSnapshot) {
+                                           if (dataSnapshot.exists()) {
+                                               QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
+                                               mMyQuestView.addData(questDao);
+                                           }
+                                       }
+
+                                       @Override
+                                       public void onCancelled(FirebaseError firebaseError) {
+
+                                       }
+                                   });
+
                                }
+
                            }
                 );
 
     }
+
 
     @Override
     public void onCancelled(FirebaseError firebaseError) {
