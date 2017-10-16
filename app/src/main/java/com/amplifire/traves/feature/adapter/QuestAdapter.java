@@ -23,12 +23,12 @@ import butterknife.ButterKnife;
 
 public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.MyViewHolder> {
 
-    private QuestSelect questSelect;
+    private ItemClickListener itemClickListener;
     private List<QuestDao> QuestDaos = new ArrayList<>();
     private Context context;
 
-    public QuestAdapter(QuestSelect questSelect, List<QuestDao> blocks) {
-        this.questSelect = questSelect;
+    public QuestAdapter(ItemClickListener itemClickListener, List<QuestDao> blocks) {
+        this.itemClickListener = itemClickListener;
         this.QuestDaos = blocks;
     }
 
@@ -43,6 +43,8 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.MyViewHolder
         IconTextView tvComplete;
         @BindView(R.id.cardview)
         CardView cardview;
+        @BindView(R.id.tv_point)
+        TextView tvPoint;
 
         public MyViewHolder(View view) {
             super(view);
@@ -72,7 +74,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.MyViewHolder
         holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                questSelect.selectedPosition(dao.getKey());
+                itemClickListener.onItemClickListener(dao.getKey());
             }
         });
 
@@ -83,7 +85,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.MyViewHolder
         return QuestDaos.size();
     }
 
-    public interface QuestSelect {
-        void selectedPosition(String key);
+    public interface ItemClickListener {
+        void onItemClickListener(String key);
     }
 }

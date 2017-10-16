@@ -15,11 +15,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.amplifire.traves.R;
-import com.amplifire.traves.feature.adapter.QuestStartedAdapter;
+import com.amplifire.traves.feature.adapter.QuestAdapter;
+import com.amplifire.traves.feature.base.BaseActivity;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.utils.FirebaseUtils;
@@ -45,19 +45,26 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class QuestStartedActivity extends AppCompatActivity implements
         OnMapReadyCallback,
-        QuestStartedAdapter.ItemClickListener {
+        QuestAdapter.ItemClickListener {
     private static final String TAG = QuestStartedActivity.class.getSimpleName();
     private static final int PERMISSION_REQUEST_LOCATION = 101;
     private static final String USER_MARKER = "userMarker";
+    @BindView(R.id.rv_quest_started)
+    RecyclerView rvQuestStarted;
 
-    private QuestStartedAdapter mAdapter;
+    private QuestAdapter mAdapter;
 
     private LocationDao mLocationDao;
-    private Map<String, QuestDao> mQuestsDao = new HashMap<>();
+
+    private List<QuestDao> mQuestsDao = new ArrayList<>();
 
     private DatabaseReference mDatabase;
     private HashMap<DatabaseReference, ValueEventListener> mListenerMap = new HashMap<>();
@@ -73,6 +80,7 @@ public class QuestStartedActivity extends AppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest_started);
+        ButterKnife.bind(this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -94,16 +102,45 @@ public class QuestStartedActivity extends AppCompatActivity implements
         getPlace("loc2");
     }
 
+
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_quest_started);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void setToolbarTitle(String title) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+    }
+
+    private void setupQuestList() {
+        rvQuestStarted.setLayoutManager(new LinearLayoutManager(this));
+        rvQuestStarted.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        rvQuestStarted.setItemAnimator(new DefaultItemAnimator());
+        mAdapter = new QuestAdapter(this, mQuestsDao);
+        rvQuestStarted.setAdapter(mAdapter);
+    }
+
+    private void requestLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST_LOCATION);
+        } else {
+            setupMap();
+        }
+    }
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         getUserLocation();
-    }
-
-    @Override
-    public void onItemClickListener(View view, int position) {
-        Toast.makeText(this, "clicked!", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -120,16 +157,6 @@ public class QuestStartedActivity extends AppCompatActivity implements
         }
     }
 
-    private void requestLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSION_REQUEST_LOCATION);
-        } else {
-            setupMap();
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -137,17 +164,6 @@ public class QuestStartedActivity extends AppCompatActivity implements
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        for (Map.Entry<DatabaseReference, ValueEventListener> entry : mListenerMap.entrySet()) {
-            DatabaseReference reference = entry.getKey();
-            ValueEventListener listener = entry.getValue();
-            reference.removeEventListener(listener);
-        }
-        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
     }
 
     private void setupMap() {
@@ -212,29 +228,6 @@ public class QuestStartedActivity extends AppCompatActivity implements
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 64));
     }
 
-    private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_quest_started);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    private void setToolbarTitle(String title) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(title);
-        }
-    }
-
-    private void setupQuestList() {
-        mAdapter = new QuestStartedAdapter(this, this);
-
-        RecyclerView rvQuestStarted = (RecyclerView) findViewById(R.id.rv_quest_started);
-        rvQuestStarted.setLayoutManager(new LinearLayoutManager(this));
-        rvQuestStarted.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        rvQuestStarted.setItemAnimator(new DefaultItemAnimator());
-        rvQuestStarted.setAdapter(mAdapter);
-    }
 
     private void getPlace(String placeID) {
         mDatabase.child(FirebaseUtils.LOCATION).child(placeID).keepSynced(true);
@@ -260,13 +253,12 @@ public class QuestStartedActivity extends AppCompatActivity implements
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
+                questDao.setKey(dataSnapshot.getKey());
                 if (questDao != null) {
                     if (mMap != null) {
                         addNewMarker(dataSnapshot.getKey(), questDao.getLatitude(), questDao.getLongitude());
                     }
-
-                    mQuestsDao.put(dataSnapshot.getKey(), questDao);
-                    mAdapter.setData(mQuestsDao);
+                    mQuestsDao.add(questDao);
                     mAdapter.notifyDataSetChanged();
                 }
             }
@@ -288,4 +280,22 @@ public class QuestStartedActivity extends AppCompatActivity implements
         mLocationRequest.setFastestInterval(1500);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
+
+    @Override
+    public void onItemClickListener(String key) {
+        //todo
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        for (Map.Entry<DatabaseReference, ValueEventListener> entry : mListenerMap.entrySet()) {
+            DatabaseReference reference = entry.getKey();
+            ValueEventListener listener = entry.getValue();
+            reference.removeEventListener(listener);
+        }
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+    }
+
+
 }

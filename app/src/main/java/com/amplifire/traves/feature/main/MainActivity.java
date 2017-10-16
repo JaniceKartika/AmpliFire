@@ -189,6 +189,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
 
     @Subscribe
     public void onEvent(GetUserEvent event) {
+        userData = event.dataSnapshot;
+        PrefHelper.saveUser(this, userData);
         boolean isEmpty = true;
         try {
             textName.setText(mAuth.getCurrentUser().getEmail() + "");
