@@ -68,9 +68,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_complete"
-                    android:layout_marginTop="@dimen/dimens_8dp"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_12sp"
+                    android:layout_marginTop="@dimen/dimens_4dp"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/text_14sp"
                     tools:text="Short description..." />
 
                 <TextView
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_below="@+id/tv_description"
-                    android:layout_marginTop="@dimen/dimens_8dp"
+                    android:layout_marginTop="@dimen/dimens_4dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_16sp"
                     tools:text="200 point" />
