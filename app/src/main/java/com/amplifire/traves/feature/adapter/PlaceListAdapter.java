@@ -93,7 +93,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.MyVi
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.mIVThumbnail);
 
-        holder.mCardView.setOnClickListener(v -> placeSelect.selectedPosition(questDao.getKey()));
+        holder.mCardView.setOnClickListener(v -> placeSelect.selectedPosition(questDao.getTitle()));
 
         // TODO hardcoded point value
         holder.mPoint.setText("Point: 0");

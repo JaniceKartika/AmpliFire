@@ -57,7 +57,6 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest_intro);
-
         ButterKnife.bind(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -127,7 +126,6 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
                 QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
                 addData(key, questDao);
 
-
                 addData(key, questDao);
             }
 
@@ -140,7 +138,6 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
 
     private void addData(String key, QuestDao questDao) {
 
-
         questDaoMap.put(key, questDao);
         mAdapter = new PlaceListAdapter(this, questDaoMap);
         mPlaceRecycler.setAdapter(mAdapter);
@@ -149,7 +146,7 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
 
     @Override
     public void selectedPosition(String key) {
-        Toast.makeText(this, key, Toast.LENGTH_SHORT);
+        Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
     }
 
 
