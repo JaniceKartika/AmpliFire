@@ -1,5 +1,7 @@
 package com.amplifire.traves.feature.place;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,18 +12,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.feature.adapter.PlaceListAdapter;
+import com.amplifire.traves.feature.maps.QuestAreaActivity;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.utils.FirebaseUtils;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import com.amplifire.traves.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,20 +49,41 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
     @BindView(R.id.iv_header)
     ImageView headerImg;
     @BindView(R.id.tv_description)
-    TextView placeName;
+    TextView tvDescription;
+
+    private String key;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quest_intro);
+        setContentView(R.layout.activity_place_detail);
         ButterKnife.bind(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        key = getIntent().getStringExtra(Utils.DATA);
 
         setupToolbar();
-        getPlace("loc2");
+        Log.wtf("test_", key);
+        getPlace(key);
         init();
 
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("");
+        }
+    }
+
+
+    private void setToolbarTitle(String title) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+            invalidateOptionsMenu();
+        }
     }
 
     private void init() {
@@ -80,7 +99,6 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mLocationDao = dataSnapshot.getValue(LocationDao.class);
-                setToolbarTitle(mLocationDao.getName());
                 initViewPlace(mLocationDao);
                 for (String key : mLocationDao.getQuest().keySet()) {
                     getQuest(key);
@@ -95,25 +113,9 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
     }
 
     private void initViewPlace(LocationDao mLocationDao) {
-
-        Glide.with(this)
-                .load(mLocationDao.getImageUrl())
-                .placeholder(R.drawable.ic_default_profil_pict).error(R.drawable.ic_default_profil_pict)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(headerImg);
-
-        placeName.setText(mLocationDao.getName());
+        setToolbarTitle(mLocationDao.getName());
+        Utils.setImage(this, mLocationDao.getImageUrl(), headerImg);
+        tvDescription.setText(mLocationDao.getAddress());
     }
 
 
@@ -146,23 +148,16 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
 
     @Override
     public void selectedPosition(String key) {
-        Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
+        //todo check radius, jika sudah masu
+
+        QuestAreaActivity.startThisActivity(this, key);
     }
 
 
-    private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-
-    private void setToolbarTitle(String title) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(title);
-        }
+    public static void startThisActivity(Context context, String key) {
+        Intent intent = new Intent(context, PlaceDetailActivity.class);
+        intent.putExtra(Utils.DATA, key);
+        context.startActivity(intent);
     }
 }
 

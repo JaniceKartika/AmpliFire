@@ -24,6 +24,7 @@
     <string name="congrats">Congratulations! You\'ve completed the quest!</string>
     <string name="success">Success</string>
 
+    <string name="text_signup">Sign Up</string>
     <string name="text_total">Total</string>
 
     <string name="text_point">Point</string>
@@ -40,7 +41,10 @@
     <string name="start_quest">Start Quest</string>
     <string name="submit">Submit</string>
     <string name="text_logout">Logout</string>
-
+    <string name="text_logout_message">Are you sure want to logout ? </string>
+    <string name="text_yes">Yes</string>
+    <string name="text_no">No</string>
+    <string name="text_km">km</string>
     <string name="text_confirmation_code">Kode Konfirmasi</string>
 
     <string name="text_data_not_found">Data Is Empty</string>

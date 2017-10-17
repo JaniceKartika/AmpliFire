@@ -3,6 +3,7 @@ package com.amplifire.traves.feature.adapter;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,12 @@ import android.widget.TextView;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.model.LocationDao;
+import com.amplifire.traves.utils.PrefHelper;
 import com.amplifire.traves.utils.Utils;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +43,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.MyView
         ImageView ivThumbnail;
         @BindView(R.id.tv_title)
         TextView tvTitle;
+        @BindView(R.id.tv_distance)
+        TextView tvDistance;
         @BindView(R.id.tv_total_quest)
         TextView tvTotalQuest;
 
@@ -61,12 +68,18 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.MyView
         final LocationDao dao = locationDaos.get(position);
 
         Utils.setImage(context, dao.getImageUrl(), holder.ivThumbnail);
-
+        LatLng myLocation = PrefHelper.getLocation(context);
+        String jarak = "";
+        if (myLocation != null) {
+            double distance = SphericalUtil.computeDistanceBetween(new LatLng(dao.getLatitude(), dao.getLongitude()), myLocation) / 1000;
+            jarak = new DecimalFormat("##.##").format(distance) + " ";
+        }
+        holder.tvDistance.setText(jarak + context.getString(R.string.text_km) + " - " + dao.getAddress());
         holder.tvTitle.setText(dao.getName());
         if (dao.getQuest() != null) {
-            holder.tvTotalQuest.setText(dao.getQuest().size() + "\n" + context.getString(R.string.text_quest));
+            holder.tvTotalQuest.setText(dao.getQuest().size() + " " + context.getString(R.string.text_quest));
         } else {
-            holder.tvTotalQuest.setText("0\n" + context.getString(R.string.text_quest));
+            holder.tvTotalQuest.setText("0 " + context.getString(R.string.text_quest));
         }
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

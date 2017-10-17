@@ -1,6 +1,8 @@
 package com.amplifire.traves.feature.maps;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -19,10 +21,11 @@ import android.widget.Toast;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.feature.adapter.QuestAdapter;
-import com.amplifire.traves.feature.base.BaseActivity;
+import com.amplifire.traves.feature.place.PlaceDetailActivity;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.utils.FirebaseUtils;
+import com.amplifire.traves.utils.Utils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -75,6 +78,7 @@ public class QuestStartedActivity extends AppCompatActivity implements
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
+    private String key;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,6 +86,7 @@ public class QuestStartedActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_quest_started);
         ButterKnife.bind(this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        key = getIntent().getStringExtra(Utils.DATA);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         createLocationRequest();
@@ -98,7 +103,7 @@ public class QuestStartedActivity extends AppCompatActivity implements
         setupQuestList();
         requestLocationPermission();
 
-        // TODO hardcoded key value, should get from previous screen
+        //todo
         getPlace("loc2");
     }
 
@@ -283,8 +288,15 @@ public class QuestStartedActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClickListener(String key) {
-        //todo
+        PlaceDetailActivity.startThisActivity(this,key);
     }
+
+    public static void startThisActivity(Context context, String key) {
+        Intent intent = new Intent(context, QuestStartedActivity.class);
+        intent.putExtra(Utils.DATA, key);
+        context.startActivity(intent);
+    }
+
 
     @Override
     public void onStop() {

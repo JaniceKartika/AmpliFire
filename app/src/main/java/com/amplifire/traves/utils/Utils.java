@@ -1,6 +1,7 @@
 package com.amplifire.traves.utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,15 +27,16 @@ public class Utils {
 
     public static String DATA = "DATA";
 
-    public static void signOut(GoogleApiClient mGoogleApiClient) {
-        //todo alert if wanna logout
-
-        // Firebase sign out
-        FirebaseAuth.getInstance().signOut();
-        // Google sign out
-
-
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+    public static void signOut(Context context, GoogleApiClient mGoogleApiClient) {
+        final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+//        builder.setTitle(context.getResources().getString(R.string.alert));
+        builder.setMessage(context.getResources().getString(R.string.text_logout_message));
+        builder.setCancelable(false);
+        builder.setPositiveButton(context.getResources().getString(R.string.text_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseAuth.getInstance().signOut();
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
 //        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
 //                new ResultCallback<Status>() {
 //                    @Override
@@ -42,7 +44,20 @@ public class Utils {
 //
 //                    }
 //                });
-        }
+                }
+                builder.create().dismiss();
+            }
+        });
+        builder.setNegativeButton(context.getResources().getString(R.string.text_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                builder.create().dismiss();
+            }
+        });
+        final android.support.v7.app.AlertDialog dialogx = builder.create();
+        dialogx.setCanceledOnTouchOutside(false);
+        dialogx.show();
+
     }
 
     public static boolean isValidEmail(String email) {
@@ -78,6 +93,7 @@ public class Utils {
                         }
                     })
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop()
                     .into(imageview);
         }
     }

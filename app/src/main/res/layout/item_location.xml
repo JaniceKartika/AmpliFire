@@ -11,10 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/card_margin"
-        android:elevation="@dimen/dimens_4dp"
+        android:layout_marginBottom="@dimen/dimens_16dp"
         android:padding="@dimen/dimens_8dp"
-        card_view:cardCornerRadius="@dimen/card_main_radius">
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="@dimen/card_main_radius"
+        card_view:elevation="@dimen/dimens_8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,18 +38,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_height"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:scaleType="fitXY" />
+                    android:focusable="false"
+                    android:scaleType="centerCrop" />
 
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/black_transparant2"
-                android:orientation="horizontal"
+                android:background="@color/white"
+                android:orientation="vertical"
                 android:padding="@dimen/dimens_8dp"
                 android:paddingLeft="@dimen/card_title_padding"
                 android:paddingRight="@dimen/card_title_padding"
@@ -59,23 +64,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="@dimen/dimens_8dp"
-                    android:layout_weight="1"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_18sp"
                     android:textStyle="bold"
-                    tools:text="Title " />
+                    tools:text="Ayana mid plaza" />
+
+                <TextView
+                    android:id="@+id/tv_distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dimens_16dp"
+                    tools:text="10 km - Jalan abcd efg hijk lmn opqrs tu vw x" />
 
                 <TextView
                     android:id="@+id/tv_total_quest"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/ivThumbnail"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:text="8\nQuest" />
+                    android:layout_marginTop="@dimen/dimens_8dp"
+                    android:background="@drawable/shape_square"
+                    android:padding="@dimen/dimens_8dp"
+                    android:textColor="@color/green"
+                    tools:text="8 Quest" />
             </LinearLayout>
 
         </LinearLayout>

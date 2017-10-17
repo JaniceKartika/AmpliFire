@@ -11,6 +11,7 @@
         <item name="windowActionBarOverlay">true</item>
         <item name="windowNoTitle">true</item>
 
+
     </style>
 
     <style name="MyButton" parent="Widget.AppCompat.Button.Colored">
@@ -47,10 +48,7 @@
     <style name="MyEditTextBox">
         <item name="android:paddingTop">@dimen/dimens_8dp</item>
         <item name="android:paddingBottom">@dimen/dimens_8dp</item>
-        <item name="android:textSize">@dimen/text_16sp</item>
-        <item name="android:paddingLeft">@dimen/dimens_16dp</item>
-        <item name="android:paddingRight">@dimen/dimens_16dp</item>
-        <item name="android:background">@drawable/selector_bg_edittext</item>
+        <item name="android:background">@drawable/selector_edittext</item>
     </style>
 
 

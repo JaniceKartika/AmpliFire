@@ -1,7 +1,10 @@
 package com.amplifire.traves.feature.main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -29,7 +33,16 @@ import com.amplifire.traves.widget.CircleImageView;
 import com.firebase.client.DataSnapshot;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -42,8 +55,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 
-//@RuntimePermissions
+@RuntimePermissions
 public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerView,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -64,6 +79,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
     @BindView(R.id.frameLayout)
     FrameLayout frameLayout;
 
+    private static final int REQUEST_CHECK_SETTINGS = 23;
+
     @Inject
     public FirebaseUtils firebaseUtils;
 
@@ -79,9 +96,6 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
         int id = item.getItemId();
         if (id == android.R.id.home) {
             eventDrawer();
-        } else {
-            String title = item.getTitle() + "";
-            //todo
         }
         return super.onOptionsItemSelected(item);
     }
@@ -101,10 +115,10 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        buildGoogleApiClient();
         setDrawer();
         setFragment(0);
-        buildGoogleApiClient();
+
     }
 
     public static void startThisActivity(Context context) {
@@ -154,6 +168,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
     public void setFragment(int position) {
         drawer.closeDrawers();
         Fragment fragment = null;
+        setTitle(drawerDaos.get(position).getTitle());
         switch (position) {
             case 0: //point
                 fragment = QuestListFragment.newInstance();
@@ -177,7 +192,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
     }
 
     private void logout() {
-        Utils.signOut(mGoogleApiClient);
+        Utils.signOut(this, mGoogleApiClient);
     }
 
 
@@ -221,14 +236,70 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        getLocation();
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (lastLocation == null) {
+            createLocationRequest();
+        } else {
+            Log.wtf("Test_1", lastLocation + "");
+            PrefHelper.saveLocation(this, lastLocation);
+            setFragment(0);
+        }
+
     }
 
-    public void getLocation() {
-        LocationServices.getFusedLocationProviderClient(this).getLastLocation().addOnSuccessListener(location -> {
-            PrefHelper.saveLocation(MainActivity.this, location);
+    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    protected void createLocationRequest() {
+
+        final LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
+                        builder.build());
+
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(@NonNull LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates locationSettingsStates = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        LocationServices.FusedLocationApi.requestLocationUpdates(
+                                mGoogleApiClient, mLocationRequest, mLocationListener);
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        try {
+                            status.startResolutionForResult(
+                                    MainActivity.this,
+                                    REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way
+                        // to fix the settings so we won't show the dialog.
+
+                        break;
+                }
+            }
         });
     }
+
+
+    private LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            Log.wtf("Test_2", location + "");
+            PrefHelper.saveLocation(MainActivity.this, location);
+            setFragment(0);
+        }
+    };
 
     @Override
     public void onConnectionSuspended(int i) {

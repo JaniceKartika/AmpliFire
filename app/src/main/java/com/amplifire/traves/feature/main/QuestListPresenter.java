@@ -58,6 +58,7 @@ final class QuestListPresenter implements MainContract.QuestPresenter, FirebaseU
         ref = (Firebase) firebaseUtils.getData(firebaseUtils.LOCATION, null, null);
         childEventListener = firebaseUtils.childListener(this);
         ref.addChildEventListener(childEventListener);
+        ref.keepSynced(true);
     }
 
     @Override

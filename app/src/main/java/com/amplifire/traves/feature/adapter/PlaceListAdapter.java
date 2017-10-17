@@ -11,11 +11,13 @@ import android.widget.TextView;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.model.QuestDao;
+import com.amplifire.traves.utils.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.util.Util;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.ArrayList;
@@ -76,22 +78,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.MyVi
         holder.mTitle.setText(questDao.getTitle());
         holder.mDescription.setText(questDao.getDesc());
 
-        Glide.with(context)
-                .load(questDao.getImageUrl())
-                .placeholder(R.drawable.ic_default_profil_pict).error(R.drawable.ic_default_profil_pict)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.mIVThumbnail);
+        Utils.setImage(context, questDao.getImageUrl(), holder.mIVThumbnail);
 
         holder.mCardView.setOnClickListener(v -> placeSelect.selectedPosition(questDao.getTitle()));
 

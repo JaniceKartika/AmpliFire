@@ -1,6 +1,7 @@
 package com.amplifire.traves.feature.maps;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.amplifire.traves.R;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.utils.FirebaseUtils;
+import com.amplifire.traves.utils.Utils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -72,12 +74,13 @@ public class QuestAreaActivity extends AppCompatActivity implements
     private LocationDao mLocationDao;
 
     private int locationUpdateCount = 0;
-
+    private String key;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest_area);
 
+        key = getIntent().getStringExtra(Utils.DATA);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -114,8 +117,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         getUserLocation();
-
-        // TODO hardcoded key value, should get from previous screen
+//todo        getPlace(key);
         getPlace("loc2");
     }
 
@@ -262,4 +264,11 @@ public class QuestAreaActivity extends AppCompatActivity implements
             }
         });
     }
+
+    public static void startThisActivity(Context context, String key) {
+        Intent intent = new Intent(context, QuestAreaActivity.class);
+        intent.putExtra(Utils.DATA, key);
+        context.startActivity(intent);
+    }
+
 }
