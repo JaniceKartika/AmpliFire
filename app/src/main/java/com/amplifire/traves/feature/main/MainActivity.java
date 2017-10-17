@@ -253,7 +253,6 @@ public class MainActivity extends BaseActivity implements
         if (lastLocation == null) {
             createLocationRequest();
         } else {
-            Log.wtf("Test_1", lastLocation + "");
             PrefHelper.saveLocation(this, lastLocation);
             setFragment(0);
         }
@@ -308,7 +307,6 @@ public class MainActivity extends BaseActivity implements
     private LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            Log.wtf("Test_2", location + "");
             PrefHelper.saveLocation(MainActivity.this, location);
             setFragment(0);
         }

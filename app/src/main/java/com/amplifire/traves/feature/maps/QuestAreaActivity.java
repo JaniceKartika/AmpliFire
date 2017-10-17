@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.model.LocationDao;
+import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -47,6 +48,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 
@@ -63,6 +67,9 @@ public class QuestAreaActivity extends AppCompatActivity implements
     };
 
     private GoogleMap mMap;
+    private List<QuestDao> mQuestsDao = new ArrayList<>();
+    private Map<String, Marker> mMarkerMap = new HashMap<>();
+
     private Marker mMarker;
     private ArrayList<LatLng> mLatLngs = new ArrayList<>(Arrays.asList(INIT_LAT_LNGS));
 
@@ -75,6 +82,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
 
     private int locationUpdateCount = 0;
     private String key;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,8 +125,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         getUserLocation();
-//todo        getPlace(key);
-        getPlace("loc2");
+        getPlace(key);
     }
 
     @Override
@@ -176,17 +183,20 @@ public class QuestAreaActivity extends AppCompatActivity implements
     }
 
     private void updateMarker(Location location) {
-        LatLng locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(locationLatLng)
-                .title(getString(R.string.marker_position_title))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker));
-        remove(mMarker);
-        mMarker = mMap.addMarker(markerOptions);
-        mMarker.showInfoWindow();
+        if (location.getLatitude() != 0 && location.getLongitude() != 0) {
+            LatLng locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(locationLatLng)
+                    .title(getString(R.string.marker_position_title))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker));
 
-        mLatLngs.set(0, mMarker.getPosition());
-        setupCamera(mLatLngs);
+            remove(mMarker);
+            mMarker = mMap.addMarker(markerOptions);
+            mMarker.showInfoWindow();
+
+            mLatLngs.set(0, mMarker.getPosition());
+            setupCamera(mLatLngs);
+        }
     }
 
     private void getUserLocation() {

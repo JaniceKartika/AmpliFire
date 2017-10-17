@@ -14,6 +14,7 @@ import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
 import com.amplifire.traves.feature.adapter.QuestAdapter;
 import com.amplifire.traves.feature.maps.QuestAreaActivity;
+import com.amplifire.traves.feature.maps.QuestStartedActivity;
 import com.amplifire.traves.feature.place.PlaceDetailActivity;
 import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.utils.FirebaseUtils;
@@ -93,7 +94,7 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.MyQu
 
     @Override
     public void onItemClickListener(String key) {
-        PlaceDetailActivity.startThisActivity(getContext(),key);
+        QuestStartedActivity.startThisActivity(getContext(),key);
     }
 
 

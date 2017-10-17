@@ -52,6 +52,7 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
     @BindView(R.id.tv_description)
     TextView tvDescription;
 
+
     private String key;
 
     @Override
@@ -64,7 +65,6 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
         key = getIntent().getStringExtra(Utils.DATA);
 
         setupToolbar();
-        Log.wtf("test_", key);
         getPlace(key);
         init();
 
