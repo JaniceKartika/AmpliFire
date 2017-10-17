@@ -13,12 +13,15 @@ import android.widget.TextView;
 import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
 import com.amplifire.traves.feature.adapter.LocationAdapter;
-import com.amplifire.traves.feature.maps.QuestStartedActivity;
 import com.amplifire.traves.feature.place.PlaceDetailActivity;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +60,8 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
 
     Unbinder unbinder;
 
+    private GeoFire mGeoFire;
+
     @Inject
     public QuestListFragment() {
     }
@@ -77,6 +82,10 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
         unbinder = ButterKnife.bind(this, root);
         init();
         mPresenter.takeView(getContext(), this);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire");
+        mGeoFire = new GeoFire(ref);
+
         return root;
     }
 
@@ -97,7 +106,7 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
 
     @Override
     public void selectedPosition(String key) {
-        PlaceDetailActivity.startThisActivity(getContext(),key);
+        PlaceDetailActivity.startThisActivity(getContext(), key);
     }
 
 
@@ -105,29 +114,27 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
     public void addData(LocationDao locationDao) {
         if (Utils.isOnRange(getContext(), new LatLng(locationDao.getLatitude(), locationDao.getLongitude()))) {
             locationDaos.add(locationDao);
+            mGeoFire.setLocation(locationDao.getKey(), new GeoLocation(locationDao.getLatitude(), locationDao.getLongitude()));
             notifyAdapter();
         }
     }
 
     @Override
     public void updateData(LocationDao locationDao) {
-        getLocationDaos(locationDao, firebaseUtils.CHANGE);
+        getLocationDaos(locationDao, FirebaseUtils.CHANGE);
     }
 
     @Override
     public void removeData(LocationDao locationDao) {
-        getLocationDaos(locationDao, firebaseUtils.REMOVE);
+        getLocationDaos(locationDao, FirebaseUtils.REMOVE);
+        mGeoFire.removeLocation(locationDao.getKey());
     }
 
     private void getLocationDaos(LocationDao locationDao, int type) {
         Observable.from(locationDaos)
                 .subscribeOn(Schedulers.newThread())
                 .filter(data -> {
-                    if (data.getKey().equals(locationDao.getKey())) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return data.getKey().equals(locationDao.getKey());
                 })
                 .observeOn(mainThread())
                 .subscribe(new Observer<LocationDao>() {
@@ -144,7 +151,7 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
                                @Override
                                public void onNext(LocationDao dao) {
                                    locationDaos.remove(dao);
-                                   if (type == firebaseUtils.CHANGE) {
+                                   if (type == FirebaseUtils.CHANGE) {
                                        //update
                                        locationDaos.add(locationDao);
                                    }

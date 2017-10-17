@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -69,6 +70,15 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -99,9 +109,11 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mLocationDao = dataSnapshot.getValue(LocationDao.class);
-                initViewPlace(mLocationDao);
-                for (String key : mLocationDao.getQuest().keySet()) {
-                    getQuest(key);
+                if (mLocationDao != null) {
+                    initViewPlace(mLocationDao);
+                    for (String key : mLocationDao.getQuest().keySet()) {
+                        getQuest(key);
+                    }
                 }
             }
 
@@ -113,7 +125,7 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
     }
 
     private void initViewPlace(LocationDao mLocationDao) {
-        setToolbarTitle(mLocationDao.getName());
+        setToolbarTitle(mLocationDao.getName() == null ? "" : mLocationDao.getName());
         Utils.setImage(this, mLocationDao.getImageUrl(), headerImg);
         tvDescription.setText(mLocationDao.getAddress());
     }
@@ -126,9 +138,10 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String key = dataSnapshot.getKey();
                 QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
-                addData(key, questDao);
-
-                addData(key, questDao);
+                if (questDao != null) {
+                    questDao.setKey(key);
+                    addData(key, questDao);
+                }
             }
 
             @Override
@@ -139,7 +152,6 @@ public class PlaceDetailActivity extends AppCompatActivity implements PlaceListA
     }
 
     private void addData(String key, QuestDao questDao) {
-
         questDaoMap.put(key, questDao);
         mAdapter = new PlaceListAdapter(this, questDaoMap);
         mPlaceRecycler.setAdapter(mAdapter);

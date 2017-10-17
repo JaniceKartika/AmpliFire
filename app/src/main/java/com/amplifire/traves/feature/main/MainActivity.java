@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -60,8 +62,11 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerView,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends BaseActivity implements
+        DrawerAdapter.DrawerView,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     //drawer
     @BindView(R.id.drawer)
@@ -119,7 +124,13 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
         buildGoogleApiClient();
         setDrawer();
         setFragment(0);
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
 
     public static void startThisActivity(Context context) {
@@ -215,7 +226,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
             e.printStackTrace();
         }
         if (event.dataSnapshot != null) {
-            DataSnapshot point = event.dataSnapshot.child(mFirebaseUtils.POINT);
+            DataSnapshot point = event.dataSnapshot.child(FirebaseUtils.POINT);
             if (point.exists()) {
                 isEmpty = false;
                 textPoint.setText(point.getValue() + " " + getString(R.string.text_point));
@@ -310,6 +321,11 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
     }
 }

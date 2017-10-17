@@ -288,7 +288,7 @@ public class QuestStartedActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClickListener(String key) {
-        PlaceDetailActivity.startThisActivity(this,key);
+        // TODO goto detail quest
     }
 
     public static void startThisActivity(Context context, String key) {
