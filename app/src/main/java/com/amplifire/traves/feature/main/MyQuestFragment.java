@@ -94,7 +94,8 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.MyQu
 
     @Override
     public void onItemClickListener(String key) {
-        QuestStartedActivity.startThisActivity(getContext(),key);
+        // TODO goto detail quest
+//        QuestDetailActivity.startThisActivity(getContext(),key);
     }
 
 
