@@ -25,6 +25,7 @@ import com.amplifire.traves.R;
 import com.amplifire.traves.eventbus.GetUserEvent;
 import com.amplifire.traves.feature.adapter.DrawerAdapter;
 import com.amplifire.traves.feature.base.BaseActivity;
+import com.amplifire.traves.feature.setting.SettingsFragment;
 import com.amplifire.traves.model.DrawerDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.PrefHelper;
@@ -179,6 +180,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.DrawerVi
             case 2: //rewards
                 break;
             case 3: //settings
+                fragment = new SettingsFragment();
                 break;
             case 4: //help
                 break;

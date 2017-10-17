@@ -46,6 +46,7 @@ ext {
     permissionsdispatcherVersion = '2.0.7'
     gsonVersion = '2.0.0'
     glideVersion = '3.8.0'
+    geofireVersion = '2.1.2'
 }
 
 

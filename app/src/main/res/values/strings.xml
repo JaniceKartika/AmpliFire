@@ -54,4 +54,8 @@
     <string name="directions">Directions</string>
     <string name="location_permission_not_granted">Need location permission</string>
     <string name="marker_position_title">You\'re here</string>
+
+    <string name="title_notification">Notification</string>
+    <string name="summary_notification">Receive notification while entering quests area.</string>
+    <string name="pref_key_notification" translatable="false">key_notification</string>
 </resources>

@@ -10,8 +10,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="windowNoTitle">true</item>
-
-
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <style name="MyButton" parent="Widget.AppCompat.Button.Colored">
