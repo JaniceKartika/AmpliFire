@@ -70,12 +70,11 @@ public class Utils {
         int radius = Integer.parseInt(mRemoteConfig.getString(FirebaseUtils.RADIUS));
         int distance = (int) SphericalUtil.computeDistanceBetween(myLocation, latLng);
         int rad = radius * 1000;
-//        if (distance > rad) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-        return true;
+        if (distance > rad) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public static void setImage(Context context, String url, ImageView imageview) {
