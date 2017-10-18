@@ -2,11 +2,13 @@ package com.amplifire.traves.feature.maps;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -62,17 +64,8 @@ public class QuestDetailActivity extends AppCompatActivity {
     LinearLayout upLayout;
     @BindView(R.id.label_desc)
     TextView labelDesc;
-    @BindView(R.id.up_layout1)
-    RelativeLayout upLayout1;
-    @BindView(R.id.label_task)
-    TextView labelTask;
     @BindView(R.id.picture)
     ImageView picture;
-
-//    layout_quiz
-//            layout_market
-//    layout_picture
-//            layout_treasure
 
     @BindView(R.id.barcode_scanner)
     CompoundBarcodeView barcodeScanner;
@@ -91,6 +84,16 @@ public class QuestDetailActivity extends AppCompatActivity {
     TextView question;
     @BindView(R.id.radio_group)
     RadioGroup radioGroup;
+    @BindView(R.id.picture_camera)
+    ImageView imgCamera;
+
+    @BindView(R.id.quiz_label)
+    TextView labelQuiz;
+
+    @BindView(R.id.treasure_label)
+    TextView treasureLabel;
+
+
     private List<TreasureDao> treasureDaos = new ArrayList<>();
 
     private DatabaseReference mDatabase;
@@ -116,7 +119,36 @@ public class QuestDetailActivity extends AppCompatActivity {
 
         getQuest(key);
 
+        picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCamera();
+            }
+        });
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void openCamera() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, 99);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 99 && data.getExtras().get("data") != null) {
+            Bitmap image = (Bitmap) data.getExtras().get("data");
+//            picture.setImageBitmap(image);
+            picture.setVisibility(View.GONE);
+            imgCamera.setVisibility(View.VISIBLE);
+            imgCamera.setImageBitmap(image);
+        }
     }
 
     private void setupToolbar() {
@@ -159,6 +191,13 @@ public class QuestDetailActivity extends AppCompatActivity {
     private void initView(QuestDao questDao) {
         Utils.setImage(this, questDao.getImageUrl(), imgQuestQuiz);
 
+        layoutPicture.setVisibility(View.GONE);
+        labelQuiz.setVisibility(View.GONE);
+        layoutQuiz.setVisibility(View.GONE);
+        layoutMarket.setVisibility(View.GONE);
+        treasureLabel.setVisibility(View.GONE);
+        layoutTreasure.setVisibility(View.GONE);
+
         setToolbarTitle(questDao.getTitle());
         int point = 0;
         if (!questDao.picture.equals("null")) {
@@ -166,18 +205,20 @@ public class QuestDetailActivity extends AppCompatActivity {
             pictureDao = questDao.picture;
             point += pictureDao.point;
         }
-        if (!questDao.market.equals("null")) {
-            layoutMarket.setVisibility(View.VISIBLE);
-            marketDao = questDao.market;
-            point += marketDao.point;
-        }
+//        if (!questDao.market.equals("null")) {
+//            layoutMarket.setVisibility(View.GONE);
+//            marketDao = questDao.market;
+//            point += marketDao.point;
+//        }
         if (!questDao.quiz.equals("null")) {
+            labelQuiz.setVisibility(View.VISIBLE);
             layoutQuiz.setVisibility(View.VISIBLE);
             quizDao = questDao.quiz;
             addRadioButton(questDao);
             point += quizDao.point;
         }
         if (!questDao.treasure.equals("null")) {
+            treasureLabel.setVisibility(View.VISIBLE);
             layoutTreasure.setVisibility(View.VISIBLE);
             treasureDao = questDao.treasure;
             barcodeScanner.decodeContinuous(callback);

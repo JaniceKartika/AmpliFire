@@ -283,7 +283,7 @@ public class QuestStartedActivity extends AppCompatActivity implements
         tvDescription.setText(mLocationDao.getAddress());
         mMap.addCircle(new CircleOptions()
                 .center(new LatLng(mLocationDao.getLatitude(), mLocationDao.getLongitude()))
-                .radius(mLocationDao.getRadius() * 1000)
+                .radius(mLocationDao.getRadius() * 100)
                 .strokeColor(R.color.grey)
                 .strokeWidth(1.0f)
                 .fillColor(R.color.grey_transparant));

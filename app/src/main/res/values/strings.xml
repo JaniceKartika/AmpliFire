@@ -62,6 +62,9 @@
 
     <string name="notification_title">Quests Found</string>
     <string name="notification_text">Find out what\'s interesting</string>
-
+    <string name="add_pic_text">Take a picture</string>
+    <string name="label_treasure">Find Treasure</string>
+    <string name="label_quiz">Quiz</string>
+    <string name="label_description">Description</string>
     <string name="text_treasure_failed">Barcode didnt match</string>
 </resources>
