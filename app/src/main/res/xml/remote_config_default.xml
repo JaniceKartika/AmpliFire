@@ -2,6 +2,8 @@
 <defaultsMap>
     <entry>
         <key>radius</key>
-            <value>2</value>
+        <value>2</value>
+        <key>splashscreen</key>
+        <value>empty</value>
     </entry>
 </defaultsMap>
