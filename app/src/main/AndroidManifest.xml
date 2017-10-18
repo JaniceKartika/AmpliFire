@@ -50,10 +50,10 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
             android:name=".feature.maps.QuestAreaActivity"
-            android:parentActivityName=".feature.main.MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".feature.maps.QuestStartedActivity"
+            android:parentActivityName=".feature.main.MainActivity"
             android:screenOrientation="portrait" />
 
         <activity

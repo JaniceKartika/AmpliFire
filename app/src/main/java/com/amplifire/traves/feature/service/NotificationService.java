@@ -14,6 +14,7 @@ import android.support.v4.app.TaskStackBuilder;
 import com.amplifire.traves.App;
 import com.amplifire.traves.R;
 import com.amplifire.traves.feature.main.MainActivity;
+import com.amplifire.traves.feature.maps.QuestStartedActivity;
 import com.amplifire.traves.feature.place.PlaceDetailActivity;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
@@ -44,7 +45,7 @@ public class NotificationService extends Service {
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent action = new Intent(this, PlaceDetailActivity.class);
+        Intent action = new Intent(this, QuestStartedActivity.class);
         action.putExtra(Utils.DATA, key);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
