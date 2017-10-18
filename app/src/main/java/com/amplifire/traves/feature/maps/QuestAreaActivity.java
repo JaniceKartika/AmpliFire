@@ -219,7 +219,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
         );
         mMap.addCircle(new CircleOptions()
                 .center(position)
-                .radius(mLocationDao.getRadius() * 1000)
+                .radius(mLocationDao.getRadius() * 100)
                 .strokeColor(R.color.grey)
                 .strokeWidth(1.0f)
                 .fillColor(R.color.grey_transparant));
