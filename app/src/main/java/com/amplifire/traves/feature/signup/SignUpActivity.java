@@ -8,9 +8,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.amplifire.traves.R;
-import com.amplifire.traves.Utils.Utils;
+import com.amplifire.traves.utils.Utils;
 import com.amplifire.traves.feature.base.BaseActivity;
-import com.amplifire.traves.widget.AlertLoadingFragment;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
@@ -103,11 +102,7 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
 
     @Override
     public void showAlert(boolean isShow) {
-        if (isShow) {
-            AlertLoadingFragment.showAlert(this);
-        } else {
-            AlertLoadingFragment.setDismiss(this);
-        }
+        super.showAlert(isShow);
     }
 
     @Override
@@ -125,11 +120,15 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mSignUpPresenter.takeView(this);
+    public void onStart() {
+        super.onStart();
+        mSignUpPresenter.takeView(this, this);
     }
 
-
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mSignUpPresenter.dropView();
+    }
 
 }

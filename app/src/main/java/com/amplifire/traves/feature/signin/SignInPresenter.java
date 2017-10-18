@@ -20,8 +20,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
-import com.amplifire.traves.widget.AlertLoadingFragment;
+import com.amplifire.traves.utils.FirebaseUtils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -50,6 +51,10 @@ final class SignInPresenter implements SignInContract.Presenter {
     public SignInPresenter() {
     }
 
+    @Inject
+    public FirebaseUtils firebaseUtils;
+
+
     @Override
     public void signIn(String email, String password) {
         mSignInView.showAlert(true);
@@ -57,10 +62,10 @@ final class SignInPresenter implements SignInContract.Presenter {
                 .addOnCompleteListener((Activity) mSignInView, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()) {
-                            mSignInView.signInFailed();
+                        if (task.isSuccessful()) {
+                            signInSuccess(task);
                         } else {
-                            mSignInView.signInSuccess();
+                            mSignInView.signInFailed();
                         }
                     }
                 });
@@ -98,8 +103,7 @@ final class SignInPresenter implements SignInContract.Presenter {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            //todo if is new (save to fire database)
-                            mSignInView.signInSuccess();
+                            signInSuccess(task);
                         } else {
                             mSignInView.signInFailed();
                         }
@@ -108,6 +112,11 @@ final class SignInPresenter implements SignInContract.Presenter {
                 });
     }
 
+
+    private void signInSuccess(Task<AuthResult> task) {
+        firebaseUtils.createUser(task);
+        mSignInView.signInSuccess();
+    }
 
     private void handleFacebookAccessToken(LoginResult loginResult) {
         AccessToken token = loginResult.getAccessToken();
@@ -119,8 +128,7 @@ final class SignInPresenter implements SignInContract.Presenter {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         mSignInView.showAlert(false);
                         if (task.isSuccessful()) {
-                            //todo if is new (save to fire database)
-                            mSignInView.signInSuccess();
+                            signInSuccess(task);
                         } else {
                             mSignInView.signInFailed();
                         }
@@ -130,8 +138,13 @@ final class SignInPresenter implements SignInContract.Presenter {
 
 
     @Override
-    public void takeView(SignInContract.View view) {
+    public void takeView(Context context, SignInContract.View view) {
         mSignInView = view;
+    }
+
+    @Override
+    public void dropView() {
+//        mSignInView = null;
     }
 
 }

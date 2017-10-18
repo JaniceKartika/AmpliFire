@@ -22,7 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-
 public class LoadingFragment extends Fragment {
 
     @BindView(R.id.imgBack)
@@ -51,8 +50,6 @@ public class LoadingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -72,30 +69,22 @@ public class LoadingFragment extends Fragment {
 
         imgFront.setImageDrawable(ContextCompat.getDrawable(getContext(), imgDrawable.get(count)));
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(1000);
-                        mHandler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                count++;
-                                if (count == imgs.length - 1) {
-                                    count = 0;
-                                }
-                                flip();
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                    mHandler.post(() -> {
+                        count++;
+                        if (count == imgs.length - 1) {
+                            count = 0;
+                        }
+                        flip();
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
-
 
         return view;
     }
@@ -128,6 +117,4 @@ public class LoadingFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
-
 }

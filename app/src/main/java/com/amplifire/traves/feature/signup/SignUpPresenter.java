@@ -17,9 +17,11 @@
 package com.amplifire.traves.feature.signup;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.amplifire.traves.utils.FirebaseUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -36,6 +38,9 @@ final class SignUpPresenter implements SignUpContract.Presenter {
 
     }
 
+    @Inject
+    public FirebaseUtils firebaseUtils;
+
     @Override
     public void createUserEmail(String email, String password) {
         mSignUpView.showAlert(true);
@@ -43,16 +48,20 @@ final class SignUpPresenter implements SignUpContract.Presenter {
                 .addOnCompleteListener((Activity) mSignUpView, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        //todo save to fire database
+                        firebaseUtils.createUser(task);
                         mSignUpView.registerResult(task);
                     }
                 });
     }
 
     @Override
-    public void takeView(SignUpContract.View view) {
+    public void takeView(Context context, SignUpContract.View view) {
         mSignUpView = view;
     }
 
+    @Override
+    public void dropView() {
+        mSignUpView = null;
+    }
 
 }

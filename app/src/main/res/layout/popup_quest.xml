@@ -1,39 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="@dimen/dimens_72dp"
-        android:layout_height="@dimen/dimens_72dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dimens_16dp"
-        app:srcCompat="@drawable/ic_check" />
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dimens_32dp"
-        android:text="@string/success"
-        android:textAllCaps="true"
-        android:textAppearance="?android:textAppearanceLarge" />
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dimens_16dp"
+        android:paddingEnd="@dimen/dimens_16dp"
+        android:paddingStart="@dimen/dimens_16dp"
+        android:paddingTop="@dimen/dimens_16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dimens_4dp"
-        android:text="@string/congrats" />
+        <ImageView
+            android:layout_width="@dimen/dimens_72dp"
+            android:layout_height="@dimen/dimens_72dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
+            android:tint="@color/green"
+            app:srcCompat="@drawable/ic_check" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dimens_64dp"
-        tools:text="Points earned: 200 " />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimens_16dp"
+            android:text="@string/success"
+            android:textAllCaps="true"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textStyle="bold" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimens_4dp"
+            android:gravity="center"
+            android:text="@string/congrats"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimens_64dp"
+            android:textSize="@dimen/text_16sp"
+            tools:text="Points earned: 200 " />
+
+    </LinearLayout>
 </LinearLayout>
+

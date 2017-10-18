@@ -1,57 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:src="@drawable/banner"
-                android:id="@+id/img_item_rewards"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_item_title"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:layout_gravity="bottom"
-                android:textSize="@dimen/text_18sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                tools:text="Discount 20 % Samsung Galaxy S8"/>
-        </FrameLayout>
         <LinearLayout
-            android:padding="5dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/trophy"/>
-            <TextView
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.amplifire.traves.widget.ImageViewMeasurement
+                    android:id="@+id/img_item_rewards"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:height_divider="2" />
+
+                <TextView
+                    android:id="@+id/txt_item_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_18sp"
+                    android:textStyle="bold"
+                    tools:text="Discount 20 % Samsung Galaxy S8" />
+            </FrameLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="@string/points"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:layout_gravity="center"
-                android:id="@+id/txt_item_points"/>
-        </LinearLayout>
-    </LinearLayout>
-    </android.support.v7.widget.CardView>
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-</LinearLayout>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/trophy" />
+
+                <TextView
+                    android:id="@+id/txt_item_points"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    tools:text="@string/text_pts" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</FrameLayout>
