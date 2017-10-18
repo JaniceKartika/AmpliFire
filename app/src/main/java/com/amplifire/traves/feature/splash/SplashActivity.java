@@ -51,9 +51,9 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             long mRemoteConfigCacheExpiration = 3600; //in seconds
 //            todo for debug
-//            if (mRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
-//                mRemoteConfigCacheExpiration = 0;
-//            }
+            if (mRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
+                mRemoteConfigCacheExpiration = 0;
+            }
             mRemoteConfig.fetch(mRemoteConfigCacheExpiration)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {

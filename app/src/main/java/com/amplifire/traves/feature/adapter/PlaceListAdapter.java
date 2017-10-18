@@ -83,7 +83,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.MyVi
         holder.mCardView.setOnClickListener(v -> placeSelect.selectedPosition(questDao.getTitle()));
 
         // TODO hardcoded point value
-        holder.mPoint.setText("Point: 0");
+//        holder.mPoint.setText("Point: 0");
     }
 
     @Override

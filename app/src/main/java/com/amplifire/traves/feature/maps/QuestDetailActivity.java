@@ -1,19 +1,167 @@
 package com.amplifire.traves.feature.maps;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.amplifire.traves.R;
+import com.amplifire.traves.model.MarketDao;
+import com.amplifire.traves.model.PictureDao;
+import com.amplifire.traves.model.QuestDao;
+import com.amplifire.traves.model.QuizDao;
+import com.amplifire.traves.model.TreasureDao;
+import com.amplifire.traves.utils.FirebaseUtils;
+import com.amplifire.traves.utils.Utils;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by user on 16/10/2017.
  */
 
 public class QuestDetailActivity extends AppCompatActivity {
+
+    @BindView(R.id.img_quest_quiz)
+    ImageView imgQuestQuiz;
+    @BindView(R.id.txt_points_quest)
+    TextView txtPointsQuest;
+    @BindView(R.id.txt_progress_quest)
+    TextView txtProgressQuest;
+    @BindView(R.id.txt_desc_quiz)
+    TextView txtDescQuiz;
+
+    private DatabaseReference mDatabase;
+    private String key;
+
+    private PictureDao pictureDao;
+    private MarketDao marketDao;
+    private QuizDao quizDao;
+    //    public int status;
+    private Map<String, TreasureDao> treasureDao;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest_quiz);
+        ButterKnife.bind(this);
+        key = getIntent().getStringExtra(Utils.DATA);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        setupToolbar();
+
+        getQuest(key);
     }
+
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("");
+        }
+    }
+
+
+    private void setToolbarTitle(String title) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+            invalidateOptionsMenu();
+        }
+    }
+
+
+    private void getQuest(String questID) {
+        ValueEventListener questListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
+                if (questDao != null) {
+                    initView(questDao);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+//                Log.w(TAG, "onCancelled", databaseError.toException());
+            }
+        };
+        DatabaseReference questReference = mDatabase.child(FirebaseUtils.QUEST).child(questID);
+        questReference.addValueEventListener(questListener);
+
+    }
+
+    private void initView(QuestDao questDao) {
+        Utils.setImage(this, questDao.getImageUrl(), imgQuestQuiz);
+
+//        private PictureDao picture;
+//        private MarketDao market;
+//        private QuizDao quiz;
+//        //    public int status;
+//        private Map<String, TreasureDao> treasure;
+
+        setToolbarTitle(questDao.getTitle());
+        int point = 0;
+        if (!questDao.picture.equals("null")) {
+            pictureDao = questDao.picture;
+            point += pictureDao.point;
+        }
+        if (!questDao.market.equals("null")) {
+            marketDao = questDao.market;
+            point += marketDao.point;
+        }
+        if (!questDao.quiz.equals("null")) {
+            quizDao = questDao.quiz;
+            point += quizDao.point;
+        }
+        if (!questDao.treasure.equals("null")) {
+            treasureDao = questDao.treasure;
+
+            for (Map.Entry<String, TreasureDao> entry : treasureDao.entrySet()) {
+                if (entry.getKey().equals("point")) {
+                    try {
+                        if (!TextUtils.isEmpty(entry.getValue().toString())) {
+                            try {
+                                int p = Integer.parseInt(entry.getValue().toString());
+                                point += p;
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }
+        txtDescQuiz.setText(questDao.getDesc() + "");
+        txtPointsQuest.setText(this.getString(R.string.text_point) + " : " + point);
+
+        //todo txtProgressQuest
+    }
+
+    public static void startThisActivity(Context context, String key) {
+        Intent intent = new Intent(context, QuestDetailActivity.class);
+        intent.putExtra(Utils.DATA, key);
+        context.startActivity(intent);
+    }
+
+
 }

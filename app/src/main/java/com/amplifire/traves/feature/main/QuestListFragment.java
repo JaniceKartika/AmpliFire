@@ -14,7 +14,6 @@ import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
 import com.amplifire.traves.feature.adapter.LocationAdapter;
 import com.amplifire.traves.feature.maps.QuestStartedActivity;
-import com.amplifire.traves.feature.place.PlaceDetailActivity;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
