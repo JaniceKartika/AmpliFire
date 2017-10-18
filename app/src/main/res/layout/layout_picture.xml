@@ -11,7 +11,7 @@
         android:layout_width="@dimen/dimens_80dp"
         android:layout_height="@dimen/dimens_80dp"
         android:foreground="?android:attr/selectableItemBackground"
-        android:srcCompat="@drawable/ic_add_grey_24dp" />
+        android:src="@drawable/ic_add_grey_24dp" />
 
 
 </LinearLayout>

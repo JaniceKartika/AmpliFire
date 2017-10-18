@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,7 +57,7 @@ public class QuestDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quest_quiz);
+        setContentView(R.layout.activity_quest_detail);
         ButterKnife.bind(this);
         key = getIntent().getStringExtra(Utils.DATA);
         mDatabase = FirebaseDatabase.getInstance().getReference();
