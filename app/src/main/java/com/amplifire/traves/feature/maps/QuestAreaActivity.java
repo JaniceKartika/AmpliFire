@@ -48,9 +48,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 
@@ -67,8 +64,6 @@ public class QuestAreaActivity extends AppCompatActivity implements
     };
 
     private GoogleMap mMap;
-    private List<QuestDao> mQuestsDao = new ArrayList<>();
-    private Map<String, Marker> mMarkerMap = new HashMap<>();
 
     private Marker mMarker;
     private ArrayList<LatLng> mLatLngs = new ArrayList<>(Arrays.asList(INIT_LAT_LNGS));
@@ -182,6 +177,17 @@ public class QuestAreaActivity extends AppCompatActivity implements
         }
     }
 
+    private void addNewMarker(double lat, double lng) {
+        LatLng position = new LatLng(lat, lng);
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(position)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.red_pin));
+        mMap.addMarker(markerOptions);
+
+        mLatLngs.add(new LatLng(lat, lng));
+        setupCamera(mLatLngs);
+    }
+
     private void updateMarker(Location location) {
         if (location.getLatitude() != 0 && location.getLongitude() != 0) {
             LatLng locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -262,10 +268,14 @@ public class QuestAreaActivity extends AppCompatActivity implements
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mLocationDao = dataSnapshot.getValue(LocationDao.class);
-                drawArea();
-
-                mLatLngs.set(1, new LatLng(mLocationDao.getLatitude(), mLocationDao.getLongitude()));
-                setupCamera(mLatLngs);
+                if (mLocationDao != null) {
+                    drawArea();
+                    for (String questID : mLocationDao.getQuest().keySet()) {
+                        getQuest(questID);
+                    }
+                    mLatLngs.set(1, new LatLng(mLocationDao.getLatitude(), mLocationDao.getLongitude()));
+                    setupCamera(mLatLngs);
+                }
             }
 
             @Override
@@ -273,6 +283,28 @@ public class QuestAreaActivity extends AppCompatActivity implements
                 Log.w(TAG, "onCancelled", databaseError.toException());
             }
         });
+    }
+
+    private void getQuest(String questID) {
+        ValueEventListener questListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
+                if (questDao != null) {
+                    if (mMap != null) {
+                        addNewMarker(questDao.getLatitude(), questDao.getLongitude());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
+            }
+        };
+
+        DatabaseReference questReference = mDatabase.child(FirebaseUtils.QUEST).child(questID);
+        questReference.addListenerForSingleValueEvent(questListener);
     }
 
     public static void startThisActivity(Context context, String key) {
