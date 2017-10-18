@@ -5,18 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.amplifire.traves.R;
-import com.amplifire.traves.model.QuestDao;
-import com.amplifire.traves.utils.FirebaseUtils;
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -33,6 +21,7 @@ import com.amplifire.traves.model.QuizDao;
 import com.amplifire.traves.model.TreasureDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -107,7 +96,7 @@ public class QuestDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quest_quiz);
+        setContentView(R.layout.activity_quest_detail);
         ButterKnife.bind(this);
 
         getQuest("quest1");
@@ -124,54 +113,54 @@ public class QuestDetailActivity extends AppCompatActivity {
                     questDao.setKey(key);
                     txtTitle.setText(questDao.getTitle());
                     txtDesc.setText(questDao.getDesc());
-                    txtPoints.setText(""+questDao.getQuiz().getPoint());
+                    txtPoints.setText("" + questDao.getQuiz().getPoint());
                     Glide.with(QuestDetailActivity.this).load(questDao.getImageUrl())
                             .placeholder(android.R.color.darker_gray)
                             .error(android.R.color.black)
                             .into(imgQuest);
-        setContentView(R.layout.activity_quest_detail);
-        key = getIntent().getStringExtra(Utils.DATA);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+                    setContentView(R.layout.activity_quest_detail);
+                    key = getIntent().getStringExtra(Utils.DATA);
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        setupToolbar();
+                    setupToolbar();
 
-        getQuest(key);
+                    getQuest(key);
 
-    }
+                }
 
-    private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("");
-        }
-    }
-
-
-    private void setToolbarTitle(String title) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(title);
-            invalidateOptionsMenu();
-        }
-    }
-
-
-    private void getQuest(String questID) {
-        ValueEventListener questListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
-                if (questDao != null) {
-                    initView(questDao);
+            private void setupToolbar() {
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    getSupportActionBar().setTitle("");
                 }
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
+            private void setToolbarTitle(String title) {
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(title);
+                    invalidateOptionsMenu();
+                }
             }
-        });
+
+
+            private void getQuest(String questID) {
+                ValueEventListener questListener = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
+                        if (questDao != null) {
+                            initView(questDao);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 //                Log.w(TAG, "onCancelled", databaseError.toException());
             }
         };
