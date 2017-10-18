@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity implements
         drawerDaos.add(new DrawerDao(getString(R.string.text_my) + " " + getString(R.string.text_quest), false, false));
         drawerDaos.add(new DrawerDao(getString(R.string.text_scoreboard), false, false));
         drawerDaos.add(new DrawerDao(getString(R.string.text_settings), false, true));
-        drawerDaos.add(new DrawerDao(getString(R.string.text_help), false, false));
+//        drawerDaos.add(new DrawerDao(getString(R.string.text_help), false, false));
 
         mAdapter = new DrawerAdapter(this, drawerDaos);
         drawerRecycler.setAdapter(mAdapter);
