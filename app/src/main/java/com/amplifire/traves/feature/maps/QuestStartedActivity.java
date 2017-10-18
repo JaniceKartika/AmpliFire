@@ -17,11 +17,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.feature.adapter.QuestAdapter;
-import com.amplifire.traves.feature.place.PlaceDetailActivity;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.utils.FirebaseUtils;
@@ -36,6 +38,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -53,6 +56,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class QuestStartedActivity extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -60,8 +64,17 @@ public class QuestStartedActivity extends AppCompatActivity implements
     private static final String TAG = QuestStartedActivity.class.getSimpleName();
     private static final int PERMISSION_REQUEST_LOCATION = 101;
     private static final String USER_MARKER = "userMarker";
+
+    @BindView(R.id.iv_header)
+    ImageView headerImg;
+    @BindView(R.id.tv_description)
+    TextView tvDescription;
+
+
     @BindView(R.id.rv_quest_started)
     RecyclerView rvQuestStarted;
+    @BindView(R.id.relative)
+    RelativeLayout relativeLayout;
 
     private QuestAdapter mAdapter;
 
@@ -99,26 +112,28 @@ public class QuestStartedActivity extends AppCompatActivity implements
             }
         };
 
+
         setupToolbar();
         setupQuestList();
         requestLocationPermission();
 
-        //todo
-        getPlace("loc2");
+        getPlace(key);
     }
 
-
     private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_quest_started);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("");
         }
     }
+
 
     private void setToolbarTitle(String title) {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
+            invalidateOptionsMenu();
         }
     }
 
@@ -145,8 +160,14 @@ public class QuestStartedActivity extends AppCompatActivity implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        setGesture(false);
         getUserLocation();
     }
+
+    private void setGesture(boolean gesture) {
+        mMap.getUiSettings().setAllGesturesEnabled(gesture);
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -185,18 +206,19 @@ public class QuestStartedActivity extends AppCompatActivity implements
     }
 
     private void updateUserMarker(Location location) {
-        LatLng locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(locationLatLng)
-                .title(getString(R.string.marker_position_title))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker));
+        if (location.getLatitude() != 0 && location.getLongitude() != 0) {
+            LatLng locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(locationLatLng)
+                    .title(getString(R.string.marker_position_title))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker));
 
-        remove(mMarkerMap.get(USER_MARKER));
-        Marker temp = mMap.addMarker(markerOptions);
-        temp.showInfoWindow();
-        mMarkerMap.put(USER_MARKER, temp);
-
-        setupCamera(mMarkerMap);
+            remove(mMarkerMap.get(USER_MARKER));
+            Marker temp = mMap.addMarker(markerOptions);
+            temp.showInfoWindow();
+            mMarkerMap.put(USER_MARKER, temp);
+            setupCamera(mMarkerMap);
+        }
     }
 
     private void addNewMarker(String key, double lat, double lng) {
@@ -240,9 +262,11 @@ public class QuestStartedActivity extends AppCompatActivity implements
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mLocationDao = dataSnapshot.getValue(LocationDao.class);
-                setToolbarTitle(mLocationDao != null ? mLocationDao.getName() : "");
-                for (String questID : mLocationDao.getQuest().keySet()) {
-                    getQuest(questID);
+                if (mLocationDao != null) {
+                    initViewPlace(mLocationDao);
+                    for (String questID : mLocationDao.getQuest().keySet()) {
+                        getQuest(questID);
+                    }
                 }
             }
 
@@ -253,16 +277,31 @@ public class QuestStartedActivity extends AppCompatActivity implements
         });
     }
 
+    private void initViewPlace(LocationDao mLocationDao) {
+        setToolbarTitle(mLocationDao.getName() == null ? "" : mLocationDao.getName());
+        Utils.setImage(this, mLocationDao.getImageUrl(), headerImg);
+        tvDescription.setText(mLocationDao.getAddress());
+        mMap.addCircle(new CircleOptions()
+                .center(new LatLng(mLocationDao.getLatitude(), mLocationDao.getLongitude()))
+                .radius(mLocationDao.getRadius() * 1000)
+                .strokeColor(R.color.grey)
+                .strokeWidth(1.0f)
+                .fillColor(R.color.grey_transparant));
+
+
+    }
+
+
     private void getQuest(String questID) {
         ValueEventListener questListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
-                questDao.setKey(dataSnapshot.getKey());
                 if (questDao != null) {
                     if (mMap != null) {
                         addNewMarker(dataSnapshot.getKey(), questDao.getLatitude(), questDao.getLongitude());
                     }
+                    questDao.setKey(dataSnapshot.getKey());
                     mQuestsDao.add(questDao);
                     mAdapter.notifyDataSetChanged();
                 }
@@ -288,7 +327,7 @@ public class QuestStartedActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClickListener(String key) {
-        // TODO goto detail quest
+        QuestDetailActivity.startThisActivity(this, key);
     }
 
     public static void startThisActivity(Context context, String key) {
@@ -310,4 +349,8 @@ public class QuestStartedActivity extends AppCompatActivity implements
     }
 
 
+    @OnClick(R.id.relative)
+    public void onViewClicked() {
+        QuestAreaActivity.startThisActivity(this, key);
+    }
 }

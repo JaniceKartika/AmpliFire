@@ -28,15 +28,17 @@
                     android:layout_height="@dimen/dimens_64dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/dimens_8dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@drawable/icon_login" />
 
                 <TextView
+                    android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/dimens_8dp"
                     android:text="@string/app_name"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_40sp"
+                    android:textSize="@dimen/text_50sp"
                     android:textStyle="bold" />
             </LinearLayout>
 

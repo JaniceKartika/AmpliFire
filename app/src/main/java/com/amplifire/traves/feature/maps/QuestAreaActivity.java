@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.model.LocationDao;
+import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -63,6 +64,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
     };
 
     private GoogleMap mMap;
+
     private Marker mMarker;
     private ArrayList<LatLng> mLatLngs = new ArrayList<>(Arrays.asList(INIT_LAT_LNGS));
 
@@ -75,6 +77,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
 
     private int locationUpdateCount = 0;
     private String key;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,8 +120,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         getUserLocation();
-//todo        getPlace(key);
-        getPlace("loc2");
+        getPlace(key);
     }
 
     @Override
@@ -175,18 +177,32 @@ public class QuestAreaActivity extends AppCompatActivity implements
         }
     }
 
-    private void updateMarker(Location location) {
-        LatLng locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+    private void addNewMarker(double lat, double lng) {
+        LatLng position = new LatLng(lat, lng);
         MarkerOptions markerOptions = new MarkerOptions()
-                .position(locationLatLng)
-                .title(getString(R.string.marker_position_title))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker));
-        remove(mMarker);
-        mMarker = mMap.addMarker(markerOptions);
-        mMarker.showInfoWindow();
+                .position(position)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.red_pin));
+        mMap.addMarker(markerOptions);
 
-        mLatLngs.set(0, mMarker.getPosition());
+        mLatLngs.add(new LatLng(lat, lng));
         setupCamera(mLatLngs);
+    }
+
+    private void updateMarker(Location location) {
+        if (location.getLatitude() != 0 && location.getLongitude() != 0) {
+            LatLng locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(locationLatLng)
+                    .title(getString(R.string.marker_position_title))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker));
+
+            remove(mMarker);
+            mMarker = mMap.addMarker(markerOptions);
+            mMarker.showInfoWindow();
+
+            mLatLngs.set(0, mMarker.getPosition());
+            setupCamera(mLatLngs);
+        }
     }
 
     private void getUserLocation() {
@@ -209,7 +225,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
         );
         mMap.addCircle(new CircleOptions()
                 .center(position)
-                .radius(mLocationDao.getRadius() * 1000)
+                .radius(mLocationDao.getRadius() * 100)
                 .strokeColor(R.color.grey)
                 .strokeWidth(1.0f)
                 .fillColor(R.color.grey_transparant));
@@ -252,10 +268,14 @@ public class QuestAreaActivity extends AppCompatActivity implements
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mLocationDao = dataSnapshot.getValue(LocationDao.class);
-                drawArea();
-
-                mLatLngs.set(1, new LatLng(mLocationDao.getLatitude(), mLocationDao.getLongitude()));
-                setupCamera(mLatLngs);
+                if (mLocationDao != null) {
+                    drawArea();
+                    for (String questID : mLocationDao.getQuest().keySet()) {
+                        getQuest(questID);
+                    }
+                    mLatLngs.set(1, new LatLng(mLocationDao.getLatitude(), mLocationDao.getLongitude()));
+                    setupCamera(mLatLngs);
+                }
             }
 
             @Override
@@ -263,6 +283,28 @@ public class QuestAreaActivity extends AppCompatActivity implements
                 Log.w(TAG, "onCancelled", databaseError.toException());
             }
         });
+    }
+
+    private void getQuest(String questID) {
+        ValueEventListener questListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
+                if (questDao != null) {
+                    if (mMap != null) {
+                        addNewMarker(questDao.getLatitude(), questDao.getLongitude());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
+            }
+        };
+
+        DatabaseReference questReference = mDatabase.child(FirebaseUtils.QUEST).child(questID);
+        questReference.addListenerForSingleValueEvent(questListener);
     }
 
     public static void startThisActivity(Context context, String key) {

@@ -19,7 +19,6 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -29,6 +28,7 @@ import com.amplifire.traves.R;
 import com.amplifire.traves.eventbus.GetUserEvent;
 import com.amplifire.traves.feature.adapter.DrawerAdapter;
 import com.amplifire.traves.feature.base.BaseActivity;
+import com.amplifire.traves.feature.service.NotificationBroadcastReceiver;
 import com.amplifire.traves.feature.setting.SettingsFragment;
 import com.amplifire.traves.model.DrawerDao;
 import com.amplifire.traves.utils.FirebaseUtils;
@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity implements
         drawerDaos.add(new DrawerDao(getString(R.string.text_my) + " " + getString(R.string.text_quest), false, false));
         drawerDaos.add(new DrawerDao(getString(R.string.text_scoreboard), false, false));
         drawerDaos.add(new DrawerDao(getString(R.string.text_settings), false, true));
-        drawerDaos.add(new DrawerDao(getString(R.string.text_help), false, false));
+//        drawerDaos.add(new DrawerDao(getString(R.string.text_help), false, false));
 
         mAdapter = new DrawerAdapter(this, drawerDaos);
         drawerRecycler.setAdapter(mAdapter);
@@ -265,7 +265,6 @@ public class MainActivity extends BaseActivity implements
         if (lastLocation == null) {
             createLocationRequest();
         } else {
-            Log.wtf("Test_1", lastLocation + "");
             PrefHelper.saveLocation(this, lastLocation);
             setFragment(0);
         }
@@ -330,7 +329,6 @@ public class MainActivity extends BaseActivity implements
     private LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            Log.wtf("Test_2", location + "");
             PrefHelper.saveLocation(MainActivity.this, location);
             setFragment(0);
         }
@@ -348,6 +346,6 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+        NotificationBroadcastReceiver.shouldEnableNotification(this);
     }
 }

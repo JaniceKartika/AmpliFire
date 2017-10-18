@@ -104,6 +104,7 @@ final class MyQuestPresenter implements MainContract.MyQuestPresenter, FirebaseU
                                        public void onDataChange(DataSnapshot dataSnapshot) {
                                            if (dataSnapshot.exists()) {
                                                QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
+                                               questDao.setKey(dataSnapshot.getKey());
                                                mMyQuestView.addData(questDao);
                                            }
                                        }
