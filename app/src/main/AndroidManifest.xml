@@ -53,12 +53,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".feature.maps.QuestStartedActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".feature.place.PlaceDetailActivity"
@@ -90,5 +85,18 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".feature.service.NotificationService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".feature.service.NotificationBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

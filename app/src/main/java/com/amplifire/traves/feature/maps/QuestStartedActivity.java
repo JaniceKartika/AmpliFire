@@ -17,9 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -300,11 +297,11 @@ public class QuestStartedActivity extends AppCompatActivity implements
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
-                questDao.setKey(dataSnapshot.getKey());
                 if (questDao != null) {
                     if (mMap != null) {
                         addNewMarker(dataSnapshot.getKey(), questDao.getLatitude(), questDao.getLongitude());
                     }
+                    questDao.setKey(dataSnapshot.getKey());
                     mQuestsDao.add(questDao);
                     mAdapter.notifyDataSetChanged();
                 }

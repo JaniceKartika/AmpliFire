@@ -17,7 +17,6 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -27,6 +26,7 @@ import com.amplifire.traves.R;
 import com.amplifire.traves.eventbus.GetUserEvent;
 import com.amplifire.traves.feature.adapter.DrawerAdapter;
 import com.amplifire.traves.feature.base.BaseActivity;
+import com.amplifire.traves.feature.service.NotificationBroadcastReceiver;
 import com.amplifire.traves.feature.setting.SettingsFragment;
 import com.amplifire.traves.model.DrawerDao;
 import com.amplifire.traves.utils.FirebaseUtils;
@@ -324,6 +324,6 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+        NotificationBroadcastReceiver.shouldEnableNotification(this);
     }
 }
