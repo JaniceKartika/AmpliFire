@@ -16,7 +16,8 @@
 
             <include
                 android:id="@+id/toolbar_quest_detail"
-                layout="@layout/toolbar" />
+                layout="@layout/toolbar"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/up_layout1"
@@ -113,19 +114,23 @@
 
             <include
                 android:id="@+id/layout_quiz"
-                layout="@layout/layout_quiz" />
+                layout="@layout/layout_quiz"
+                android:visibility="gone" />
 
             <include
                 android:id="@+id/layout_market"
-                layout="@layout/layout_market" />
+                layout="@layout/layout_market"
+                android:visibility="gone" />
 
             <include
                 android:id="@+id/layout_picture"
-                layout="@layout/layout_picture" />
+                layout="@layout/layout_picture"
+                android:visibility="gone" />
 
             <include
                 android:id="@+id/layout_treasure"
-                layout="@layout/layout_treasure" />
+                layout="@layout/layout_treasure"
+                android:visibility="gone" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
@@ -139,5 +144,12 @@
         android:gravity="center"
         android:text="Submit"
         android:textColor="@color/white" />
+
+    <com.journeyapps.barcodescanner.CompoundBarcodeView
+        android:id="@+id/barcode_scanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 
 </RelativeLayout>

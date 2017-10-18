@@ -7,7 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amplifire.traves.R;
@@ -23,7 +26,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.zxing.ResultPoint;
+import com.joanzapata.iconify.widget.IconTextView;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.CompoundBarcodeView;
 
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -43,6 +52,26 @@ public class QuestDetailActivity extends AppCompatActivity {
     TextView txtProgressQuest;
     @BindView(R.id.txt_desc_quiz)
     TextView txtDescQuiz;
+    @BindView(R.id.barcode_scanner)
+    CompoundBarcodeView barcodeScanner;
+    @BindView(R.id.up_layout)
+    LinearLayout upLayout;
+    @BindView(R.id.label_desc)
+    TextView labelDesc;
+    @BindView(R.id.up_layout1)
+    RelativeLayout upLayout1;
+    @BindView(R.id.label_task)
+    TextView labelTask;
+    @BindView(R.id.picture)
+    ImageView picture;
+    @BindView(R.id.treasure_title)
+    TextView treasureTitle;
+    @BindView(R.id.treasure_complete)
+    IconTextView treasureComplete;
+    @BindView(R.id.relative)
+    LinearLayout relative;
+    @BindView(R.id.btn_submit)
+    Button btnSubmit;
 
     private DatabaseReference mDatabase;
     private String key;
@@ -65,6 +94,7 @@ public class QuestDetailActivity extends AppCompatActivity {
         setupToolbar();
 
         getQuest(key);
+
     }
 
     private void setupToolbar() {
@@ -155,6 +185,25 @@ public class QuestDetailActivity extends AppCompatActivity {
 
         //todo txtProgressQuest
     }
+
+
+    private BarcodeCallback callback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(BarcodeResult result) {
+            if (result.getText() != null) {
+                setBarcodeText(result.getText());
+            }
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> resultPoints) {
+        }
+    };
+
+    private void setBarcodeText(String string) {
+
+    }
+
 
     public static void startThisActivity(Context context, String key) {
         Intent intent = new Intent(context, QuestDetailActivity.class);
