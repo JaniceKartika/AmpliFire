@@ -98,5 +98,20 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <!-- [START gcm_listener] -->
+        <service android:name=".feature.service.MessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <activity
+            android:name=".feature.service.NotificationActivity"
+            android:excludeFromRecents="true"
+            android:taskAffinity="">
+
+        </activity>
+        <!-- [END gcm_listener] -->
+
     </application>
 </manifest>

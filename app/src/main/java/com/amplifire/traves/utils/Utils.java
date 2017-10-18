@@ -1,13 +1,20 @@
 package com.amplifire.traves.utils;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.amplifire.traves.App;
 import com.amplifire.traves.R;
+import com.amplifire.traves.feature.service.NotificationService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -97,4 +104,21 @@ public class Utils {
                     .into(imageview);
         }
     }
+
+    public static void showNotification(Context context, String title) {
+
+
+//        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+//        builder.setSmallIcon(R.mipmap.ic_launcher)
+//                .setLargeIcon(BitmapFactory.decodeResource(context),R.mipmap.ic_launcher)
+//                .setColor(Color.RED)
+//                .setContentTitle(title)
+//                .setContentIntent(notificationPendingIntent);
+//        builder.setAutoCancel(true);
+//        NotificationManager mNotificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        mNotificationManager.notify(0, builder.build());
+    }
+
 }

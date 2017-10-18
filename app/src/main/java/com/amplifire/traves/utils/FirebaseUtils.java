@@ -57,6 +57,7 @@ public class FirebaseUtils {
 
     //config
     public static String RADIUS = "radius";
+    public static String SPLASHSCREEN = "splashscreen";
 
     @Inject
     public FirebaseUtils() {
