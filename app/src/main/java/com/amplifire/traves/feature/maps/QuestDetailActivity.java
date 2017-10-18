@@ -7,11 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.amplifire.traves.model.MarketDao;
 import com.amplifire.traves.model.PictureDao;
 import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.model.QuizDao;
+import com.amplifire.traves.model.QuizItemDao;
 import com.amplifire.traves.model.TreasureDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
@@ -85,6 +87,10 @@ public class QuestDetailActivity extends AppCompatActivity {
     RelativeLayout layoutPicture;
     @BindView(R.id.layout_treasure)
     LinearLayout layoutTreasure;
+    @BindView(R.id.tv_question)
+    TextView question;
+    @BindView(R.id.radio_group)
+    RadioGroup radioGroup;
     private List<TreasureDao> treasureDaos = new ArrayList<>();
 
     private DatabaseReference mDatabase;
@@ -118,7 +124,6 @@ public class QuestDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("");
         }
     }
 
@@ -169,6 +174,7 @@ public class QuestDetailActivity extends AppCompatActivity {
         if (!questDao.quiz.equals("null")) {
             layoutQuiz.setVisibility(View.VISIBLE);
             quizDao = questDao.quiz;
+            addRadioButton(questDao);
             point += quizDao.point;
         }
         if (!questDao.treasure.equals("null")) {
@@ -206,6 +212,28 @@ public class QuestDetailActivity extends AppCompatActivity {
         txtPointsQuest.setText(this.getString(R.string.text_point) + " : " + point);
 
         //todo txtProgressQuest
+    }
+
+    private void addRadioButton(QuestDao questDao) {
+
+
+        Map<String, QuizItemDao> quizDao = questDao.getQuiz().getItems();
+
+        for (QuizItemDao quizItemDao : quizDao.values()) {
+            question.setText(quizItemDao.getQuestion());
+            RadioGroup radGroup = new RadioGroup(this);
+            radGroup.setOrientation(LinearLayout.VERTICAL);
+            Map<String, String> choicesDao = quizItemDao.getChoices();
+            for (Map.Entry choice : choicesDao.entrySet()) {
+                RadioButton rdbtn = new RadioButton(this);
+                rdbtn.setId(Integer.parseInt(choice.getKey().toString().replace("cho", "")));
+                rdbtn.setText(choice.getValue().toString());
+                radGroup.addView(rdbtn);
+            }
+
+            radioGroup.addView(radGroup);
+        }
+
     }
 
     private void setLayoutTreasure(TreasureDao entry) {
