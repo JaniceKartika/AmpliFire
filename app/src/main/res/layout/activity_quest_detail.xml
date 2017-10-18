@@ -107,15 +107,25 @@
                     android:text="Task"
                     android:textSize="@dimen/text_14sp" />
 
-                <RadioGroup
-                    android:id="@+id/radio_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </RadioGroup>
 
             </RelativeLayout>
 
+
+            <include
+                android:id="@+id/layout_quiz"
+                layout="@layout/layout_quiz" />
+
+            <include
+                android:id="@+id/layout_market"
+                layout="@layout/layout_market" />
+
+            <include
+                android:id="@+id/layout_picture"
+                layout="@layout/layout_picture" />
+
+            <include
+                android:id="@+id/layout_treasure"
+                layout="@layout/layout_treasure" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
