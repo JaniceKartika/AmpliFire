@@ -15,7 +15,6 @@ import com.amplifire.traves.App;
 import com.amplifire.traves.R;
 import com.amplifire.traves.feature.main.MainActivity;
 import com.amplifire.traves.feature.maps.QuestStartedActivity;
-import com.amplifire.traves.feature.place.PlaceDetailActivity;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
 import com.firebase.geofire.GeoFire;
@@ -31,8 +30,6 @@ public class NotificationService extends Service {
 
     private static final int NOTIFICATION_ID = 42;
 
-    private String key = "";
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -45,15 +42,6 @@ public class NotificationService extends Service {
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent action = new Intent(this, QuestStartedActivity.class);
-        action.putExtra(Utils.DATA, key);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(action);
-
-        PendingIntent operation = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
         FirebaseRemoteConfig remoteConfig = App.mRemoteConfig;
         int radius = Integer.parseInt(remoteConfig.getString(FirebaseUtils.RADIUS));
 
@@ -64,7 +52,15 @@ public class NotificationService extends Service {
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                NotificationService.this.key = key;
+                Intent action = new Intent(NotificationService.this, QuestStartedActivity.class);
+                action.putExtra(Utils.DATA, key);
+
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(NotificationService.this);
+                stackBuilder.addParentStack(MainActivity.class);
+                stackBuilder.addNextIntent(action);
+
+                PendingIntent operation = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
                 Notification note = new NotificationCompat.Builder(NotificationService.this)
                         .setContentTitle(getString(R.string.notification_title))
                         .setContentText(getString(R.string.notification_text))
