@@ -1,5 +1,7 @@
 package com.amplifire.traves.di;
 
+import com.amplifire.traves.feature.areadetail.AreaDetailActivity;
+import com.amplifire.traves.feature.areadetail.AreaDetailModule;
 import com.amplifire.traves.feature.main.MainActivity;
 import com.amplifire.traves.feature.main.MainModule;
 import com.amplifire.traves.feature.signin.SignInActivity;
@@ -23,6 +25,10 @@ public abstract class ActivityBindingModule {
     @ActivityScoped
     @ContributesAndroidInjector(modules = MainModule.class)
     abstract MainActivity mainActivity();
+
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = AreaDetailModule.class)
+    abstract AreaDetailActivity areaDetailActivity();
 
 
 }

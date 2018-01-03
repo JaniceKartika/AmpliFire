@@ -60,6 +60,7 @@
     <string name="pref_key_notification" translatable="false">key_notification</string>
     <string name="points">Points: $s</string>
 
+    <string name="out_of_range">Sorry, you are out of range</string>
     <string name="notification_title">Quests Found</string>
     <string name="notification_text">Find out what\'s interesting</string>
     <string name="add_pic_text">Take a picture</string>

@@ -3,22 +3,19 @@ package com.amplifire.traves.feature.base;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.eventbus.GetUserEvent;
-import com.amplifire.traves.model.LocationDao;
-import com.amplifire.traves.model.UserDao;
+import com.amplifire.traves.feature.signin.SignInActivity;
 import com.amplifire.traves.utils.CheckPermission;
 import com.amplifire.traves.utils.FirebaseUtils;
-import com.amplifire.traves.feature.signin.SignInActivity;
 import com.amplifire.traves.utils.PrefHelper;
 import com.amplifire.traves.widget.AlertLoadingFragment;
+import com.firebase.client.DataSnapshot;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.firebase.client.DataSnapshot;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,7 +46,6 @@ public class BaseActivity extends DaggerAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -66,6 +62,7 @@ public class BaseActivity extends DaggerAppCompatActivity {
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("");
             getSupportActionBar().setHomeButtonEnabled(true);
             if (layoutResID == R.layout.activity_main) {
                 toolbar.setNavigationIcon(R.drawable.ic_menu);
@@ -99,6 +96,16 @@ public class BaseActivity extends DaggerAppCompatActivity {
         } else {
             AlertLoadingFragment.setDismiss(this);
         }
+    }
+
+    public void callPermission() {
+        CheckPermission checkPermission = new CheckPermission(this);
+        checkPermission.check();
+    }
+
+    public void setToolbarTitle(String title) {
+        getSupportActionBar().setTitle(title);
+        invalidateOptionsMenu();
     }
 
 

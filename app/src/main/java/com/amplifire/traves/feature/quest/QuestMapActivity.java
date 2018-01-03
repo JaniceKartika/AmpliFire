@@ -1,4 +1,4 @@
-package com.amplifire.traves.feature.maps;
+package com.amplifire.traves.feature.quest;
 
 import android.Manifest;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -51,9 +52,9 @@ import java.util.Arrays;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 
-public class QuestAreaActivity extends AppCompatActivity implements
+public class QuestMapActivity extends AppCompatActivity implements
         OnMapReadyCallback {
-    private static final String TAG = QuestAreaActivity.class.getSimpleName();
+    private static final String TAG = QuestMapActivity.class.getSimpleName();
 
     private static final int PERMISSION_REQUEST_LOCATION = 101;
     private static final int MAX_UPDATE_LOCATION = 3;
@@ -177,10 +178,11 @@ public class QuestAreaActivity extends AppCompatActivity implements
         }
     }
 
-    private void addNewMarker(double lat, double lng) {
+    private void addNewMarker(String title, double lat, double lng) {
         LatLng position = new LatLng(lat, lng);
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(position)
+                .title(title)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.red_pin));
         mMap.addMarker(markerOptions);
 
@@ -198,7 +200,12 @@ public class QuestAreaActivity extends AppCompatActivity implements
 
             remove(mMarker);
             mMarker = mMap.addMarker(markerOptions);
-            mMarker.showInfoWindow();
+            mMarker.hideInfoWindow();
+
+            Handler handler = new Handler();
+            Runnable runnable = () -> mMarker.showInfoWindow();
+            handler.postDelayed(runnable, 2000);
+
 
             mLatLngs.set(0, mMarker.getPosition());
             setupCamera(mLatLngs);
@@ -292,7 +299,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
                 QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
                 if (questDao != null) {
                     if (mMap != null) {
-                        addNewMarker(questDao.getLatitude(), questDao.getLongitude());
+                        addNewMarker(questDao.getTitle(), questDao.getLatitude(), questDao.getLongitude());
                     }
                 }
             }
@@ -308,7 +315,7 @@ public class QuestAreaActivity extends AppCompatActivity implements
     }
 
     public static void startThisActivity(Context context, String key) {
-        Intent intent = new Intent(context, QuestAreaActivity.class);
+        Intent intent = new Intent(context, QuestMapActivity.class);
         intent.putExtra(Utils.DATA, key);
         context.startActivity(intent);
     }

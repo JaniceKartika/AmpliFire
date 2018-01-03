@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
 import com.amplifire.traves.feature.adapter.LocationAdapter;
-import com.amplifire.traves.feature.maps.QuestStartedActivity;
+import com.amplifire.traves.feature.areadetail.AreaDetailActivity;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
@@ -106,13 +106,13 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
 
     @Override
     public void selectedPosition(String key) {
-        QuestStartedActivity.startThisActivity(getContext(), key);
+        AreaDetailActivity.startThisActivity(getContext(), key);
     }
 
 
     @Override
     public void addData(LocationDao locationDao) {
-        if (Utils.isOnRange(getContext(), new LatLng(locationDao.getLatitude(), locationDao.getLongitude()))) {
+        if (Utils.isOnRange(getContext(), new LatLng(locationDao.getLatitude(), locationDao.getLongitude()), Utils.KILOMETER)) {
             locationDaos.add(locationDao);
             mGeoFire.setLocation(locationDao.getKey(), new GeoLocation(locationDao.getLatitude(), locationDao.getLongitude()));
             notifyAdapter();

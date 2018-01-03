@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 apply plugin: 'com.google.firebase.firebase-crash'
 
@@ -65,15 +64,16 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
 
     compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
 
     testCompile "junit:junit:$rootProject.ext.junitVersion"
 
@@ -88,8 +88,8 @@ dependencies {
     compile "com.facebook.android:facebook-android-sdk:$rootProject.facebookVersion"
 
     compile "com.google.android.gms:play-services-auth:$rootProject.playServiceVersion"
-    compile "com.google.android.gms:play-services:$rootProject.playServiceVersion"
     compile "com.google.android.gms:play-services-maps:$rootProject.playServiceVersion"
+    compile "com.google.android.gms:play-services-location:$rootProject.playServiceVersion"
     compile "com.google.maps.android:android-maps-utils:$rootProject.mapsUtils"
 
 
@@ -98,9 +98,11 @@ dependencies {
 
     compile "com.google.firebase:firebase-auth:$rootProject.firebaseVersion"
     compile "com.google.firebase:firebase-core:$rootProject.firebaseVersion"
+    compile "com.google.firebase:firebase-database:$rootProject.firebaseVersion"
     compile "com.google.firebase:firebase-storage:$rootProject.firebaseVersion"
     compile "com.google.firebase:firebase-crash:$rootProject.firebaseVersion"
     compile "com.google.firebase:firebase-messaging:$rootProject.firebaseVersion"
+    compile "com.google.firebase:firebase-config:$rootProject.firebaseVersion"
 
     compile "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
@@ -120,17 +122,16 @@ dependencies {
 
     compile "org.greenrobot:eventbus:$rootProject.EventBusVersion"
 
-    compile "com.github.hotchemi:permissionsdispatcher:$rootProject.permissionsdispatcherVersion"
-    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$rootProject.permissionsdispatcherVersion"
+//    compile "com.github.hotchemi:permissionsdispatcher:$rootProject.permissionsdispatcherVersion"
+//    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$rootProject.permissionsdispatcherVersion"
 
     compile "com.squareup.retrofit2:converter-gson:$rootProject.gsonVersion"
     compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     compile "com.firebase:geofire-android:$rootProject.geofireVersion"
-    compile "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
-    compile 'com.google.zxing:core:3.2.1'
+    compile 'com.journeyapps:zxing-android-embedded:3.3.0'
+    compile 'com.google.zxing:core:3.3.1'
 
 }
 

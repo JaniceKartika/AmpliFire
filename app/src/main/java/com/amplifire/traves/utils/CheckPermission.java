@@ -15,20 +15,22 @@ import java.util.List;
 public class CheckPermission {
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     private Context context;
+    final public static List<String> permissionsNeeded = new ArrayList<>();
 
     public CheckPermission(Context context) {
         this.context = context;
     }
 
-    public void check() {
-        List<String> permissionsNeeded = new ArrayList<String>();
-
-        final List<String> permissionsList = new ArrayList<String>();
+    public boolean check() {
+        final List<String> permissionsList = new ArrayList<>();
 
         if (!addPermission(context, permissionsList, Manifest.permission.ACCESS_NETWORK_STATE))
             permissionsNeeded.add("Network");
 
         if (!addPermission(context, permissionsList, Manifest.permission.ACCESS_FINE_LOCATION))
+            permissionsNeeded.add("Location");
+
+        if (!addPermission(context, permissionsList, Manifest.permission.ACCESS_COARSE_LOCATION))
             permissionsNeeded.add("Location");
 
         if (!addPermission(context, permissionsList, Manifest.permission.CAMERA))
@@ -50,7 +52,9 @@ public class CheckPermission {
             }
             ActivityCompat.requestPermissions((Activity) context, permissionsList.toArray(new String[permissionsList.size()]),
                     REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
-            return;
+            return false;
+        } else {
+            return true;
         }
 
 

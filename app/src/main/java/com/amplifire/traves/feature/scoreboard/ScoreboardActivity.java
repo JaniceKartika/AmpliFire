@@ -1,4 +1,4 @@
-package com.amplifire.traves.feature.maps;
+package com.amplifire.traves.feature.scoreboard;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

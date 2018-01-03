@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amplifire.traves.R;
-import com.amplifire.traves.feature.maps.QuestDetailActivity;
+import com.amplifire.traves.feature.quest.QuestDetailActivity;
 import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
@@ -77,7 +77,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.MyViewHolder
         holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                itemClickListener.onItemClickListener(dao.getKey());
+                itemClickListener.onItemClickListener(dao);
                 Intent intent = new Intent(context, QuestDetailActivity.class);
                 intent.putExtra(FirebaseUtils.QUEST, dao.getKey());
             }
@@ -91,6 +91,6 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.MyViewHolder
     }
 
     public interface ItemClickListener {
-        void onItemClickListener(String key);
+        void onItemClickListener(QuestDao questDao);
     }
 }

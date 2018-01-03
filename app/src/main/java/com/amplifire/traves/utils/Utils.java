@@ -1,20 +1,12 @@
 package com.amplifire.traves.utils;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.amplifire.traves.App;
 import com.amplifire.traves.R;
-import com.amplifire.traves.feature.service.NotificationService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -33,6 +25,8 @@ import com.google.maps.android.SphericalUtil;
 public class Utils {
 
     public static String DATA = "DATA";
+    public static int METER = 1;
+    public static int KILOMETER = 1000;
 
     public static void signOut(Context context, GoogleApiClient mGoogleApiClient) {
         final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
@@ -71,13 +65,13 @@ public class Utils {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public static boolean isOnRange(Context context, LatLng latLng) {
+    public static boolean isOnRange(Context context, LatLng latLng, int unit) {
         FirebaseRemoteConfig mRemoteConfig = App.mRemoteConfig;
         LatLng myLocation = PrefHelper.getLocation(context);
         int radius = Integer.parseInt(mRemoteConfig.getString(FirebaseUtils.RADIUS));
         int distance = (int) SphericalUtil.computeDistanceBetween(myLocation, latLng);
-        int rad = radius * 1000;
-        if (distance > rad) {
+        radius = radius * unit;
+        if (distance > radius) {
             return false;
         } else {
             return true;
@@ -105,9 +99,7 @@ public class Utils {
         }
     }
 
-    public static void showNotification(Context context, String title) {
-
-
+//    public static void showNotification(Context context, String title) {
 //        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 //        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 //        builder.setSmallIcon(R.mipmap.ic_launcher)
@@ -119,6 +111,7 @@ public class Utils {
 //        NotificationManager mNotificationManager =
 //                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //        mNotificationManager.notify(0, builder.build());
-    }
+//    }
+
 
 }

@@ -14,7 +14,7 @@ import android.support.v4.app.TaskStackBuilder;
 import com.amplifire.traves.App;
 import com.amplifire.traves.R;
 import com.amplifire.traves.feature.main.MainActivity;
-import com.amplifire.traves.feature.maps.QuestStartedActivity;
+import com.amplifire.traves.feature.areadetail.AreaDetailActivity;
 import com.amplifire.traves.utils.FirebaseUtils;
 import com.amplifire.traves.utils.Utils;
 import com.firebase.geofire.GeoFire;
@@ -52,7 +52,7 @@ public class NotificationService extends Service {
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                Intent action = new Intent(NotificationService.this, QuestStartedActivity.class);
+                Intent action = new Intent(NotificationService.this, AreaDetailActivity.class);
                 action.putExtra(Utils.DATA, key);
 
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(NotificationService.this);

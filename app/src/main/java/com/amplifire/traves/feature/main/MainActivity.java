@@ -39,14 +39,14 @@ import com.firebase.client.DataSnapshot;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -60,10 +60,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.RuntimePermissions;
 
-@RuntimePermissions
 public class MainActivity extends BaseActivity implements
         DrawerAdapter.DrawerView,
         GoogleApiClient.ConnectionCallbacks,
@@ -89,8 +86,12 @@ public class MainActivity extends BaseActivity implements
 
     private static final int REQUEST_CHECK_SETTINGS = 23;
 
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
+
     @Inject
     public FirebaseUtils firebaseUtils;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -123,23 +124,13 @@ public class MainActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        buildGoogleApiClient();
+
+
         setDrawer();
         setFragment(0);
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    public static void startThisActivity(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        context.startActivity(intent);
-    }
 
     public void showAlert(boolean isShow) {
         super.showAlert(isShow);
@@ -184,13 +175,13 @@ public class MainActivity extends BaseActivity implements
         Fragment fragment = null;
         setTitle(drawerDaos.get(position).getTitle());
         switch (position) {
-            case 0: //point
+            case 0: //quest
                 fragment = QuestListFragment.newInstance();
                 break;
             case 1: //myquest
                 fragment = MyQuestFragment.newInstance();
                 break;
-            case 2: //rewards
+            case 2:
                 break;
             case 3: //settings
                 fragment = new SettingsFragment();
@@ -251,88 +242,63 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (lastLocation == null) {
-            createLocationRequest();
-        } else {
-            PrefHelper.saveLocation(this, lastLocation);
-            setFragment(0);
-        }
-
+        createLocationRequest();
     }
 
-    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    protected void createLocationRequest() {
-
-        final LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-
-        PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
-                        builder.build());
-
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+    private void createLocationRequest() {
+        mLocationCallback = new LocationCallback() {
             @Override
-            public void onResult(@NonNull LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                final LocationSettingsStates locationSettingsStates = result.getLocationSettingsStates();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Consider calling
-                            //    ActivityCompat#requestPermissions
-                            // here to request the missing permissions, and then overriding
-                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                            //                                          int[] grantResults)
-                            // to handle the case where the user grants the permission. See the documentation
-                            // for ActivityCompat#requestPermissions for more details.
-                            return;
-                        }
-                        LocationServices.FusedLocationApi.requestLocationUpdates(
-                                mGoogleApiClient, mLocationRequest, mLocationListener);
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        try {
-                            status.startResolutionForResult(
-                                    MainActivity.this,
-                                    REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            // Ignore the error.
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way
-                        // to fix the settings so we won't show the dialog.
-
-                        break;
+            public void onLocationResult(LocationResult locationResult) {
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null && location.getLatitude() != 0 && location.getLongitude() != 0) {
+                        PrefHelper.saveLocation(MainActivity.this, location);
+                        setFragment(0);
+                    }
                 }
+            }
+        };
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(60000);
+        mLocationRequest.setFastestInterval(10000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+        result.setResultCallback(result1 -> {
+            final Status status = result1.getStatus();
+            switch (status.getStatusCode()) {
+                case LocationSettingsStatusCodes.SUCCESS:
+                    getLocation();
+                    break;
+                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                    try {
+                        status.startResolutionForResult(
+                                MainActivity.this,
+                                REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException e) {
+                        // Ignore the error.
+                    }
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    // Location settings are not satisfied. However, we have no way
+                    // to fix the settings so we won't show the dialog.
+                    break;
+
             }
         });
     }
 
-
-    private LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            PrefHelper.saveLocation(MainActivity.this, location);
-            setFragment(0);
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
+            fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+        } else {
+            callPermission();
         }
-    };
+    }
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -348,4 +314,48 @@ public class MainActivity extends BaseActivity implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         NotificationBroadcastReceiver.shouldEnableNotification(this);
     }
+
+
+    public static void startThisActivity(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mGoogleApiClient != null) {
+            createLocationRequest();
+        } else {
+            buildGoogleApiClient();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopLocation();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+        stopLocation();
+    }
+
+    private void stopLocation() {
+        if (fusedLocationProviderClient != null) {
+            fusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        }
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+        fusedLocationProviderClient = null;
+        mGoogleApiClient = null;
+        mLocationCallback = null;
+    }
+
+
 }

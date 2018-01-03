@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.amplifire.traves">
 
-    <permission
-        android:name="com.iak.cabz.C2D_MESSAGE"
-        android:protectionLevel="signature" />
 
     <uses-permission android:name="com.iak.cabz.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -27,7 +24,6 @@
         <activity android:name=".feature.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -45,13 +41,13 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
-            android:name=".feature.maps.QuestAreaActivity"
+            android:name=".feature.quest.QuestMapActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".feature.maps.QuestDetailActivity"
+            android:name=".feature.quest.QuestDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".feature.maps.QuestStartedActivity"
+            android:name=".feature.areadetail.AreaDetailActivity"
             android:parentActivityName=".feature.main.MainActivity"
             android:screenOrientation="portrait" />
 
@@ -108,7 +104,7 @@
             android:taskAffinity=""></activity>
         <!-- [END gcm_listener] -->
 
-        <activity android:name=".feature.maps.ScoreboardActivity"></activity>
+        <activity android:name=".feature.scoreboard.ScoreboardActivity"></activity>
     </application>
 
 </manifest>
