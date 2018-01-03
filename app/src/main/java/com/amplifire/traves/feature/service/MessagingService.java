@@ -39,7 +39,7 @@ public class MessagingService extends FirebaseMessagingService {
     // [START receive_message]
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        int icon = R.mipmap.ic_launcher;
+        int icon = R.drawable.ic_small;
         String tag = remoteMessage.getNotification().getTag();
         String title = remoteMessage.getNotification().getTitle();
         String message = remoteMessage.getNotification().getBody();

@@ -64,7 +64,7 @@ public class NotificationService extends Service {
                 Notification note = new NotificationCompat.Builder(NotificationService.this)
                         .setContentTitle(getString(R.string.notification_title))
                         .setContentText(getString(R.string.notification_text))
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_small)
                         .setAutoCancel(true)
                         .setContentIntent(operation)
                         .build();

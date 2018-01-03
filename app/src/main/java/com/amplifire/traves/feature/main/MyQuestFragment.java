@@ -91,8 +91,8 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.MyQu
     }
 
     @Override
-    public void onItemClickListener(String key) {
-        QuestDetailActivity.startThisActivity(getContext(), key);
+    public void onItemClickListener(QuestDao questDao) {
+        QuestDetailActivity.startThisActivity(getContext(), questDao.getKey());
     }
 
 
@@ -165,4 +165,6 @@ public class MyQuestFragment extends DaggerFragment implements MainContract.MyQu
         mPresenter.dropView();
         unbinder.unbind();
     }
+
+
 }
