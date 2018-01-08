@@ -71,7 +71,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.MyView
         LatLng myLocation = PrefHelper.getLocation(context);
         String jarak = "";
         if (myLocation != null) {
-            double distance = SphericalUtil.computeDistanceBetween(new LatLng(dao.getLatitude(), dao.getLongitude()), myLocation) / 1000;
+            double distance = dao.getDistance();
             jarak = new DecimalFormat("##.##").format(distance) + " ";
         }
         holder.tvDistance.setText(jarak + context.getString(R.string.text_km) + " - " + dao.getAddress());

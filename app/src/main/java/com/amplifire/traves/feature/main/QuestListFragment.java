@@ -10,20 +10,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.amplifire.traves.App;
 import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
 import com.amplifire.traves.feature.adapter.LocationAdapter;
 import com.amplifire.traves.feature.areadetail.AreaDetailActivity;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.utils.FirebaseUtils;
+import com.amplifire.traves.utils.PrefHelper;
 import com.amplifire.traves.utils.Utils;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -112,7 +117,12 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
 
     @Override
     public void addData(LocationDao locationDao) {
-        if (Utils.isOnRange(getContext(), new LatLng(locationDao.getLatitude(), locationDao.getLongitude()), Utils.KILOMETER)) {
+        FirebaseRemoteConfig mRemoteConfig = App.mRemoteConfig;
+        int radius = Integer.parseInt(mRemoteConfig.getString(FirebaseUtils.RADIUS));
+        if (Utils.isOnRange(getContext(), new LatLng(locationDao.getLatitude(), locationDao.getLongitude()), radius, Utils.KILOMETER)) {
+            LatLng myLocation = PrefHelper.getLocation(getContext());
+            double distance = SphericalUtil.computeDistanceBetween(new LatLng(locationDao.getLatitude(), locationDao.getLongitude()), myLocation) / 1000;
+            locationDao.setDistance(distance);
             locationDaos.add(locationDao);
             mGeoFire.setLocation(locationDao.getKey(), new GeoLocation(locationDao.getLatitude(), locationDao.getLongitude()));
             notifyAdapter();
@@ -153,6 +163,9 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
                                    locationDaos.remove(dao);
                                    if (type == FirebaseUtils.CHANGE) {
                                        //update
+                                       LatLng myLocation = PrefHelper.getLocation(getContext());
+                                       double distance = SphericalUtil.computeDistanceBetween(new LatLng(locationDao.getLatitude(), locationDao.getLongitude()), myLocation) / 1000;
+                                       locationDao.setDistance(distance);
                                        locationDaos.add(locationDao);
                                    }
                                    notifyAdapter();
@@ -170,6 +183,7 @@ public class QuestListFragment extends DaggerFragment implements MainContract.Qu
         } else {
             tvempty.setVisibility(View.GONE);
         }
+        Collections.sort(locationDaos, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
         mAdapter.notifyDataSetChanged();
     }
 

@@ -66,6 +66,13 @@
     <string name="add_pic_text">Take a picture</string>
     <string name="label_treasure">Find Treasure</string>
     <string name="label_quiz">Quiz</string>
+    <string name="label_market">Buy Items</string>
     <string name="label_description">Description</string>
-    <string name="text_treasure_failed">Barcode didnt match</string>
+    <string name="text_treasure_failed">Barcode didn\'t match</string>
+
+    <string name="delete">Delete</string>
+    <string name="retake">Retake</string>
+    <string name="delete_picture">Are you sure want to delete this picture ? </string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

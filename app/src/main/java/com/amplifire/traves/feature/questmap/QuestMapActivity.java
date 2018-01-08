@@ -1,4 +1,4 @@
-package com.amplifire.traves.feature.quest;
+package com.amplifire.traves.feature.questmap;
 
 import android.Manifest;
 import android.content.Context;
@@ -51,6 +51,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
+
+
+//todo add wifii location
 
 public class QuestMapActivity extends AppCompatActivity implements
         OnMapReadyCallback {
@@ -232,7 +235,7 @@ public class QuestMapActivity extends AppCompatActivity implements
         );
         mMap.addCircle(new CircleOptions()
                 .center(position)
-                .radius(mLocationDao.getRadius() * 100)
+                .radius(mLocationDao.getRadius())
                 .strokeColor(R.color.grey)
                 .strokeWidth(1.0f)
                 .fillColor(R.color.grey_transparant));

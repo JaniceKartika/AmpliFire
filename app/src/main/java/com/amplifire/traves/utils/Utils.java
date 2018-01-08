@@ -3,9 +3,9 @@ package com.amplifire.traves.utils;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
-import com.amplifire.traves.App;
 import com.amplifire.traves.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -15,7 +15,6 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.maps.android.SphericalUtil;
 
 /**
@@ -65,10 +64,8 @@ public class Utils {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public static boolean isOnRange(Context context, LatLng latLng, int unit) {
-        FirebaseRemoteConfig mRemoteConfig = App.mRemoteConfig;
+    public static boolean isOnRange(Context context, LatLng latLng, double radius, int unit) {
         LatLng myLocation = PrefHelper.getLocation(context);
-        int radius = Integer.parseInt(mRemoteConfig.getString(FirebaseUtils.RADIUS));
         int distance = (int) SphericalUtil.computeDistanceBetween(myLocation, latLng);
         radius = radius * unit;
         if (distance > radius) {

@@ -2,23 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/dimens_4dp"
     android:orientation="vertical"
-    android:padding="@dimen/dimens_8dp">
+    android:padding="@dimen/dimens_8dp"
+    android:background="@color/white">
 
     <TextView
+        android:id="@+id/tv_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/label_quiz"
         android:textColor="@color/black"
         android:textSize="@dimen/text_16sp" />
 
-    <LinearLayout
-        android:id="@+id/layout_quiz_add"
+    <RadioGroup
+        android:id="@+id/radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimens_8dp"
-        android:orientation="vertical" />
+        android:layout_marginTop="@dimen/dimens_8dp">
 
-
+    </RadioGroup>
 </LinearLayout>

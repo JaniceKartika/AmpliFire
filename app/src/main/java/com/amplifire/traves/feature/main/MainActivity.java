@@ -259,8 +259,8 @@ public class MainActivity extends BaseActivity implements
         };
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(60000);
-        mLocationRequest.setFastestInterval(10000);
+        mLocationRequest.setInterval(999999999);
+        mLocationRequest.setFastestInterval(999999999);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);

@@ -4,6 +4,8 @@ import com.amplifire.traves.feature.areadetail.AreaDetailActivity;
 import com.amplifire.traves.feature.areadetail.AreaDetailModule;
 import com.amplifire.traves.feature.main.MainActivity;
 import com.amplifire.traves.feature.main.MainModule;
+import com.amplifire.traves.feature.questdetail.QuestDetailActivity;
+import com.amplifire.traves.feature.questdetail.QuestDetailModule;
 import com.amplifire.traves.feature.signin.SignInActivity;
 import com.amplifire.traves.feature.signin.SignInModule;
 import com.amplifire.traves.feature.signup.SignUpActivity;
@@ -30,5 +32,9 @@ public abstract class ActivityBindingModule {
     @ContributesAndroidInjector(modules = AreaDetailModule.class)
     abstract AreaDetailActivity areaDetailActivity();
 
+
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = QuestDetailModule.class)
+    abstract QuestDetailActivity questDetailActivity();
 
 }

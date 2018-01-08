@@ -1,5 +1,6 @@
 package com.amplifire.traves.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Map;
@@ -14,6 +15,9 @@ public class LocationDao {
     public String name;
     public Map<String, Boolean> quest;
     public double radius;
+
+    @JsonIgnore
+    public double distance;
 
     public void setKey(String key) {
         this.key = key;
@@ -49,5 +53,13 @@ public class LocationDao {
 
     public Map<String, Boolean> getQuest() {
         return quest;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 }

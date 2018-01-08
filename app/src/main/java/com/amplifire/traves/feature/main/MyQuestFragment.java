@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.amplifire.traves.R;
 import com.amplifire.traves.di.ActivityScoped;
 import com.amplifire.traves.feature.adapter.QuestAdapter;
-import com.amplifire.traves.feature.quest.QuestDetailActivity;
+import com.amplifire.traves.feature.questdetail.QuestDetailActivity;
 import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.utils.FirebaseUtils;
 

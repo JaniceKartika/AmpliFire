@@ -23,8 +23,8 @@ import android.widget.Toast;
 import com.amplifire.traves.R;
 import com.amplifire.traves.feature.adapter.QuestAdapter;
 import com.amplifire.traves.feature.base.BaseActivity;
-import com.amplifire.traves.feature.quest.QuestDetailActivity;
-import com.amplifire.traves.feature.quest.QuestMapActivity;
+import com.amplifire.traves.feature.questdetail.QuestDetailActivity;
+import com.amplifire.traves.feature.questmap.QuestMapActivity;
 import com.amplifire.traves.model.LocationDao;
 import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.utils.FirebaseUtils;
@@ -55,11 +55,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AreaDetailActivity extends BaseActivity implements
+        AreaDetailContract.View,
         OnMapReadyCallback,
         QuestAdapter.ItemClickListener {
 
@@ -90,6 +93,9 @@ public class AreaDetailActivity extends BaseActivity implements
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
     private String key;
+
+    @Inject
+    AreaDetailPresenter areaDetailPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -260,7 +266,7 @@ public class AreaDetailActivity extends BaseActivity implements
         tvDescription.setText(mLocationDao.getAddress());
         mMap.addCircle(new CircleOptions()
                 .center(new LatLng(mLocationDao.getLatitude(), mLocationDao.getLongitude()))
-                .radius(mLocationDao.getRadius() * 100)
+                .radius(mLocationDao.getRadius())
                 .strokeColor(R.color.grey)
                 .strokeWidth(1.0f)
                 .fillColor(R.color.grey_transparant));
@@ -301,7 +307,7 @@ public class AreaDetailActivity extends BaseActivity implements
 
     @Override
     public void onItemClickListener(QuestDao questDao) {
-        if (Utils.isOnRange(this, new LatLng(questDao.getLatitude(), questDao.getLongitude()), Utils.METER)) {
+        if (Utils.isOnRange(this, new LatLng(questDao.getLatitude(), questDao.getLongitude()), mLocationDao.getRadius(), Utils.METER)) {
             QuestDetailActivity.startThisActivity(this, questDao.getKey());
         } else {
             Toast.makeText(this, getString(R.string.out_of_range), Toast.LENGTH_LONG).show();
@@ -325,5 +331,16 @@ public class AreaDetailActivity extends BaseActivity implements
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        areaDetailPresenter.takeView(this, this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        areaDetailPresenter.dropView();
+    }
 
 }
