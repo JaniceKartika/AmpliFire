@@ -82,10 +82,11 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
     @BindView(R.id.txt_progress_quest)
     TextView txtProgressQuest;
 
-    @BindView(R.id.layout_quiz)
-    View layoutQuiz;
     @BindView(R.id.txt_desc_quest)
     TextView txtDescQuest;
+
+    @BindView(R.id.layout_quiz)
+    View layoutQuiz;
     @BindView(R.id.layout_quiz_add)
     LinearLayout layoutQuizAdd;
 
@@ -117,9 +118,11 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
     private List<ImageDao> pictureDaos = new ArrayList<>();
     private ImageAdapter pictureAdapter;
 
+    private List<RadioGroup> radioGroupQuiz = new ArrayList<>();
 
     private DatabaseReference mDatabase;
     private String key;
+    private QuestDao questDao;
 
     private PictureDao pictureDao;
     private MarketDao marketDao;
@@ -163,9 +166,9 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
         questListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                QuestDao questDao = dataSnapshot.getValue(QuestDao.class);
+                questDao = dataSnapshot.getValue(QuestDao.class);
                 if (questDao != null) {
-                    initView(questDao);
+                    initView();
                 }
             }
 
@@ -180,7 +183,7 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
 
     }
 
-    private void initView(QuestDao questDao) {
+    private void initView() {
         Utils.setImage(this, questDao.getImageUrl(), imgQuestQuiz);
 
         layoutPicture.setVisibility(View.GONE);
@@ -222,27 +225,30 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
 
     //start quiz
     private void initQuiz() {
+        layoutQuizAdd.removeAllViews();
         Map<String, QuizItemDao> quizDaos = quizDao.getItems();
-        for (QuizItemDao quizItemDao : quizDaos.values()) {
-            setLayoutQuizData(quizItemDao);
+        for (Map.Entry<String, QuizItemDao> entry : quizDaos.entrySet()) {
+            setLayoutQuizData(entry.getKey(), entry.getValue());
         }
     }
 
-    private void setLayoutQuizData(QuizItemDao quizItemDao) {
+    private void setLayoutQuizData(String key, QuizItemDao quizItemDao) {
         View child = getLayoutInflater().inflate(R.layout.item_quiz, null);
         TextView tvQuestion = (TextView) child.findViewById(R.id.tv_question);
         RadioGroup radioGroup = (RadioGroup) child.findViewById(R.id.radio_group);
         tvQuestion.setText(quizItemDao.getQuestion());
-        RadioGroup radGroup = new RadioGroup(this);
-        radGroup.setOrientation(LinearLayout.VERTICAL);
+        radioGroup.setOrientation(LinearLayout.VERTICAL);
         Map<String, String> choicesDao = quizItemDao.getChoices();
         for (Map.Entry choice : choicesDao.entrySet()) {
             RadioButton rdbtn = new RadioButton(this);
             rdbtn.setId(Integer.parseInt(choice.getKey().toString().replace("cho", "")));
+            rdbtn.setTag(choice.getKey());
             rdbtn.setText(choice.getValue().toString());
-            radGroup.addView(rdbtn);
+            radioGroup.addView(rdbtn);
         }
-        radioGroup.addView(radGroup);
+        radioGroup.setTag(key);
+        radioGroupQuiz.add(radioGroup);
+        layoutQuizAdd.addView(child);
     }
 //end quiz
 
@@ -492,6 +498,54 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_submit:
+                if (questDao.picture != null) {
+                    if (!questDao.picture.equals("null")) {
+                        if (pictureDaos.size() < questDao.getPicture().getMin()) {
+//                                false
+                        }
+                    }
+                }
+
+
+                if (questDao.treasure != null) {
+                    if (!questDao.treasure.equals("null")) {
+                        for (Map.Entry<String, TreasureDao> entry : treasureDao.entrySet()) {
+                            TreasureDao treasureDao = entry.getValue();
+                            if (treasureDao.getStatus() < 2) {
+//                                false
+                            }
+                        }
+
+                    }
+                }
+
+                if (questDao.quiz != null) {
+                    if (!questDao.quiz.equals("null")) {
+                        Map<String, QuizItemDao> quizDaos = quizDao.getItems();
+                        for (Map.Entry<String, QuizItemDao> entry : quizDaos.entrySet()) {
+                            for (int i = 0; i < radioGroupQuiz.size(); i++) {
+                                RadioGroup radioGroup = radioGroupQuiz.get(i);
+                                if (radioGroup.getTag().equals(entry.getKey())) {
+                                    int checkId = radioGroupQuiz.get(i).getCheckedRadioButtonId();
+                                    if (checkId > -1) {
+                                        RadioButton rdbtn = (RadioButton) radioGroup.findViewById(checkId);
+                                        int idx = radioGroup.indexOfChild(rdbtn);
+                                        RadioButton r = (RadioButton) radioGroup.getChildAt(idx);
+                                        String userAnswer = r.getTag().toString();
+                                        if (!userAnswer.equals(entry.getValue().getAnswer())) {
+                                            //false
+                                        }
+                                    } else {
+                                        //false
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+
 //                todo
                 break;
         }
