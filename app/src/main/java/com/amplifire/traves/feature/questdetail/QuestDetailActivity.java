@@ -19,10 +19,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -33,10 +35,12 @@ import android.widget.Toast;
 
 import com.amplifire.traves.R;
 import com.amplifire.traves.feature.adapter.ImageAdapter;
+import com.amplifire.traves.feature.adapter.MarketAdapter;
 import com.amplifire.traves.feature.adapter.TreasureAdapter;
 import com.amplifire.traves.feature.base.BaseActivity;
 import com.amplifire.traves.model.ImageDao;
 import com.amplifire.traves.model.MarketDao;
+import com.amplifire.traves.model.MarketItemDao;
 import com.amplifire.traves.model.PictureDao;
 import com.amplifire.traves.model.QuestDao;
 import com.amplifire.traves.model.QuizDao;
@@ -74,7 +78,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * Created by user on 16/10/2017.
  */
 
-public class QuestDetailActivity extends BaseActivity implements QuestDetailContract.View, ImageAdapter.event, TreasureAdapter.event {
+public class QuestDetailActivity extends BaseActivity implements QuestDetailContract.View, ImageAdapter.event, TreasureAdapter.event, MarketAdapter.event {
     @BindView(R.id.img_quest_quiz)
     ImageViewMeasurement imgQuestQuiz;
     @BindView(R.id.txt_points_quest)
@@ -92,8 +96,10 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
 
     @BindView(R.id.layout_market)
     View layoutMarket;
-    @BindView(R.id.layout_marker_data)
-    LinearLayout layoutMarkerData;
+    @BindView(R.id.recycler_market)
+    RecyclerView recyclerMarket;
+    @BindView(R.id.edittext_validation_code)
+    EditText validationCode;
 
     @BindView(R.id.layout_treasure)
     View layoutTreasure;
@@ -117,6 +123,8 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
     private TreasureAdapter treasureAdapter;
     private List<ImageDao> pictureDaos = new ArrayList<>();
     private ImageAdapter pictureAdapter;
+    private List<MarketItemDao> marketItemDaos = new ArrayList<>();
+    private MarketAdapter marketAdapter;
 
     private List<RadioGroup> radioGroupQuiz = new ArrayList<>();
 
@@ -125,10 +133,10 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
     private QuestDao questDao;
 
     private PictureDao pictureDao;
-    private MarketDao marketDao;
     private QuizDao quizDao;
     //    public int status;
     private Map<String, TreasureDao> treasureDao;
+    private MarketDao marketDao;
 
     private int treasureTargetPosition;
     private int point = 0;
@@ -151,7 +159,7 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
     }
 
     private void setQuestStatus() {
-//        if not exist : add data.
+// todo       if not exist : add data.
     }
 
     @Override
@@ -174,7 +182,6 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-//                Log.w(TAG, "onCancelled", databaseError.toException());
             }
         };
         questReference = mDatabase.child(FirebaseUtils.QUEST).child(questID);
@@ -195,7 +202,7 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
         point = 0;
 
         if (questDao.picture != null) {
-            if (!questDao.picture.equals("null")) {
+            if (!questDao.picture.equals("null") && questDao.picture.isActivated()) {
                 layoutPicture.setVisibility(View.VISIBLE);
                 pictureDao = questDao.picture;
                 point += pictureDao.point;
@@ -214,9 +221,17 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
 
         if (questDao.treasure != null) {
             if (!questDao.treasure.equals("null")) {
-                layoutTreasure.setVisibility(View.VISIBLE);
                 treasureDao = questDao.treasure;
                 initTreasure();
+            }
+        }
+
+
+        if (questDao.market != null) {
+            if (!questDao.market.equals("null")) {
+                layoutMarket.setVisibility(View.VISIBLE);
+                marketDao = questDao.market;
+                initMarket();
             }
         }
         txtDescQuest.setText(questDao.getDesc() + "");
@@ -260,15 +275,22 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
         for (Map.Entry<String, TreasureDao> entry : treasureDao.entrySet()) {
             TreasureDao treasureDao = entry.getValue();
             treasureDao.setKey(entry.getKey());
-            treasureDaos.add(treasureDao);
-            point += treasureDao.getPoint();
+            if (treasureDao.isActivated()) {
+                treasureDaos.add(treasureDao);
+                point += treasureDao.getPoint();
+            }
         }
 
-        recyclerTreasure.setLayoutManager(new LinearLayoutManager(this));
-        recyclerTreasure.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerTreasure.setItemAnimator(new DefaultItemAnimator());
-        treasureAdapter = new TreasureAdapter(this, treasureDaos);
-        recyclerTreasure.setAdapter(treasureAdapter);
+        if (treasureDaos.size() > 0) {
+            layoutTreasure.setVisibility(View.VISIBLE);
+            recyclerTreasure.setLayoutManager(new LinearLayoutManager(this));
+            recyclerTreasure.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+            recyclerTreasure.setItemAnimator(new DefaultItemAnimator());
+            treasureAdapter = new TreasureAdapter(this, treasureDaos);
+            recyclerTreasure.setAdapter(treasureAdapter);
+        } else {
+            layoutTreasure.setVisibility(View.GONE);
+        }
 
 
     }
@@ -328,6 +350,42 @@ public class QuestDetailActivity extends BaseActivity implements QuestDetailCont
         resumeBarcode();
     }
 //end treasure
+
+    //    start market
+    private void initMarket() {
+        for (Map.Entry<String, MarketItemDao> entry : marketDao.getItems().entrySet()) {
+            MarketItemDao marketItemDao = entry.getValue();
+            if (marketItemDao.isActivated()) {
+                marketItemDaos.add(marketItemDao);
+                point += marketItemDao.getPoint();
+            }
+        }
+
+        if (marketItemDaos.size() > 0) {
+            layoutMarket.setVisibility(View.VISIBLE);
+            recyclerMarket.setLayoutManager(new LinearLayoutManager(this));
+            recyclerMarket.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+            recyclerMarket.setItemAnimator(new DefaultItemAnimator());
+            marketAdapter = new MarketAdapter(this, marketItemDaos);
+            recyclerMarket.setAdapter(marketAdapter);
+
+        } else {
+            layoutMarket.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    public void updateCheckMarket(int position, boolean isChecked) {
+        int check = 0;
+        if (isChecked) {
+            check = 1;
+        }
+        Log.wtf("Test_", "x" + position + " " + isChecked);
+        marketItemDaos.get(position).setChecked(check);
+        marketAdapter.notifyDataSetChanged();
+    }
+//end market
 
     //start picture
     private void initPicture() {

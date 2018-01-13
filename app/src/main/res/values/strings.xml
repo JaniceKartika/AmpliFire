@@ -75,4 +75,6 @@
     <string name="delete_picture">Are you sure want to delete this picture ? </string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+    <string name="validation_code">Validation Code</string>
 </resources>

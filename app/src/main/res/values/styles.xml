@@ -50,5 +50,10 @@
         <item name="android:background">@drawable/selector_edittext</item>
     </style>
 
+    <style name="MyEditTextBoxBlack">
+        <item name="android:paddingTop">@dimen/dimens_8dp</item>
+        <item name="android:paddingBottom">@dimen/dimens_8dp</item>
+        <item name="android:background">@drawable/selector_edittext_black</item>
+    </style>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.amplifire.traves.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -8,6 +9,7 @@ public class TreasureDao {
     public String barcode;
     public String desc;
     public int point;
+    public boolean isActivated;
     public int status; //0 blm, 1 sudah
 
 
@@ -45,6 +47,10 @@ public class TreasureDao {
 
     public String getDesc() {
         return desc;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
     }
 
     public int getPoint() {

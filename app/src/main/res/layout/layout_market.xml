@@ -13,9 +13,35 @@
 
 
     <LinearLayout
-        android:id="@+id/layout_marker_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimens_8dp"
-        android:orientation="vertical" />
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_market"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimens_8dp"
+            android:layout_marginRight="@dimen/dimens_8dp"
+            android:layout_marginTop="@dimen/dimens_8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimens_8dp"
+            android:layout_marginRight="@dimen/dimens_8dp"
+            android:layout_marginTop="@dimen/dimens_16dp"
+            android:text="@string/validation_code" />
+
+        <EditText
+            android:id="@+id/edittext_validation_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimens_8dp"
+            android:layout_marginRight="@dimen/dimens_8dp"
+            android:maxLines="1" />
+
+    </LinearLayout>
+
 </LinearLayout>
