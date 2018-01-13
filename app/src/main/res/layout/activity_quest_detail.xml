@@ -126,7 +126,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dimens_8dp"
-                            android:textSize="@dimen/text_12sp"
                             tools:text="isi description isi description isi description isi description isi description isi description isi description isi description isi description isi description isi description isi description isi description isi description isi description isi description" />
                     </LinearLayout>
 
@@ -171,8 +170,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/dimens_8dp"
-        android:layout_marginLeft="@dimen/dimens_16dp"
-        android:layout_marginRight="@dimen/dimens_16dp"
+        android:layout_marginLeft="@dimen/dimens_8dp"
+        android:layout_marginRight="@dimen/dimens_8dp"
         android:layout_marginTop="@dimen/dimens_4dp"
         android:gravity="center"
         android:text="@string/submit"
